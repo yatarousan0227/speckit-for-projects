@@ -1,0 +1,18 @@
+screens:
+  - screen_id: SCR-001
+    screen_name: Reconciliation Report
+    fields:
+      - field_id: FLD-001
+        field_name: mismatch_count
+        label: Mismatch Count
+        type: number
+        area: summary
+        io: output
+        required: true
+        validation:
+          - non_negative
+        default_value: 0
+        source: batch_output
+        api_mapping: mismatchCount
+        data_mapping: reconciliation_report.mismatch_count
+        notes: derived after nightly processing

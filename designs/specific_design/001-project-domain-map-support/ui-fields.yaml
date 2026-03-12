@@ -1,0 +1,60 @@
+screens:
+  - screen_id: SCR-001
+    screen_name: Domain Relationship Review
+    fields:
+      - field_id: FLD-001
+        field_name: domain_name
+        label: Domain
+        type: text
+        area: header
+        io: output
+        required: true
+        validation:
+          - must match a declared domain in `.specify/project/domain-map.md`
+        default_value: null
+        source: domain map entry
+        api_mapping: API-001.domain_entry.name
+        data_mapping: ENT-002.name
+        notes: shows the owning domain for the current brief or design
+      - field_id: FLD-002
+        field_name: related_briefs
+        label: Related Briefs
+        type: list
+        area: main
+        io: output
+        required: false
+        validation:
+          - every brief ID must follow the `001-kebab-slug` rule
+        default_value: null
+        source: domain map entry
+        api_mapping: API-001.related_briefs
+        data_mapping: ENT-002.related_briefs
+        notes: reviewers use this list to identify adjacent briefs
+      - field_id: FLD-003
+        field_name: upstream_domains
+        label: Upstream Domains
+        type: list
+        area: sidebar
+        io: output
+        required: false
+        validation:
+          - each upstream domain must resolve to an existing domain entry
+        default_value: null
+        source: domain map entry
+        api_mapping: API-001.upstream_domains
+        data_mapping: ENT-002.upstream_domains
+        notes: used to widen review scope when dependencies exist
+      - field_id: FLD-004
+        field_name: downstream_domains
+        label: Downstream Domains
+        type: list
+        area: sidebar
+        io: output
+        required: false
+        validation:
+          - each downstream domain must resolve to an existing domain entry
+        default_value: null
+        source: domain map entry
+        api_mapping: API-001.downstream_domains
+        data_mapping: ENT-002.downstream_domains
+        notes: used to identify impact when changes are proposed

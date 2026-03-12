@@ -1,0 +1,42 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.python-version
+.venv/
+venv/
+env/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.tox/
+.nox/
+.coverage
+.coverage.*
+htmlcov/
+build/
+dist/
+site/
+*.egg-info/
+pip-wheel-metadata/
+
+# Node / Storybook
+node_modules/
+storybook-static/
+
+# Local agent outputs
+.agents/
+.codex/
+.myagent/
+.claude/
+.cursor/
+.gemini/
+.kiro/
+.github/agents/

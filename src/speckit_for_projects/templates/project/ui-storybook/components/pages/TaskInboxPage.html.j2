@@ -1,0 +1,45 @@
+<div class="project-storybook-frame">
+  <main class="ds-card ds-panel">
+    <div class="ds-topbar">
+      <div>
+        <p class="ds-meta" style="margin: 0 0 8px">Page</p>
+        <h1 class="ds-heading">My tasks</h1>
+      </div>
+      <button class="ds-button ds-button-primary" type="button">Create task</button>
+    </div>
+    <div class="ds-layout ds-layout-two-column">
+      <section>
+        <div class="ds-card ds-panel" style="background: var(--project-panel); margin-bottom: 16px">
+          <div class="ds-row">
+            <span class="ds-badge ds-badge-success">All tasks</span>
+            <span class="ds-meta">Search and status filters live here.</span>
+          </div>
+        </div>
+        <ul class="ds-list">
+          <li class="ds-list-item">
+            <div class="ds-row">
+              <strong>Prepare monthly report</strong>
+              <span class="ds-badge ds-badge-warning">Due today</span>
+            </div>
+            <span class="ds-meta">Waiting for finance confirmation.</span>
+          </li>
+          <li class="ds-list-item">
+            <div class="ds-row">
+              <strong>Renew SSL certificate</strong>
+              <span class="ds-meta">Due Mar 20</span>
+            </div>
+            <span class="ds-meta">Infrastructure follow-up assigned to platform team.</span>
+          </li>
+        </ul>
+      </section>
+      <aside class="ds-card ds-panel" style="background: var(--project-panel)">
+        <h2 class="ds-subheading">Task details</h2>
+        <p class="ds-meta">The right panel shows metadata, due date, and action buttons.</p>
+        <div class="ds-input-block" style="margin-top: 16px">
+          <label class="ds-label" for="task-owner">Owner</label>
+          <input class="ds-input" id="task-owner" type="text" value="Operations lead" />
+        </div>
+      </aside>
+    </div>
+  </main>
+</div>

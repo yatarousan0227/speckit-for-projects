@@ -1,0 +1,18 @@
+screens:
+  - screen_id: SCR-001
+    screen_name: Search Screen
+    fields:
+      - field_id: FLD-001
+        field_name: applicant_name
+        label: Applicant Name
+        type: text
+        area: search
+        io: input
+        required: false
+        validation:
+          - max_length: 100
+        default_value: null
+        source: user_input
+        api_mapping: applicantName
+        data_mapping: applications.applicant_name
+        notes: free text search

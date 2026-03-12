@@ -1,0 +1,247 @@
+# SpecKit for Projects CLI リファレンス
+
+この文書は `sdd init` と `sdd check` の詳細リファレンスです。挙動は現行 CLI 実装に合わせています。
+
+## 1. コマンド一覧
+
+現行 CLI で直接実行するのは次の 2 つです。
+
+- `sdd init`
+- `sdd check`
+
+`sdd.brief`、`sdd.common-design`、`sdd.design`、`sdd.tasks`、`sdd.implement` は、`init` で配置した agent 向け prompt / command / skill として使います。CLI サブコマンドではありません。
+
+## 2. `sdd init`
+
+### 2.1 役割
+
+`sdd init` は、対象ディレクトリへ次を導入します。
+
+- `.specify/` 配下の管理対象 scaffold
+- `briefs/`
+- `designs/common_design/`
+- `designs/specific_design/`
+- 指定 agent 向けの command / prompt ファイル
+- 必要に応じて `SKILL.md` 群
+
+### 2.2 基本例
+
+現在のリポジトリへ導入:
+
+```bash
+sdd init --here --ai codex --ai-skills
+```
+
+新しいディレクトリを作りつつ導入:
+
+```bash
+sdd init my-project --ai claude
+```
+
+`generic` agent へ独自出力先で導入:
+
+```bash
+sdd init --here --ai generic --ai-commands-dir .myagent/commands
+```
+
+### 2.3 引数とオプション
+
+- `project_name`: 作成対象ディレクトリ。`--here` と併用不可
+- `--here`: 現在ディレクトリへ導入する
+- `--ai <name>`: agent 種別を指定する
+- `--ai-commands-dir <path>`: `generic` 用の command 出力先
+- `--ai-skills`: command 本文を `SKILL.md` としても配置する
+- `--no-git`: `.git` がない場合の `git init` を行わない
+- `--force`: 管理対象ファイルと agent 出力物を上書きする
+- `--debug`: 追加診断を出す
+
+### 2.4 オプション組み合わせの制約
+
+- `--ai-skills` は `--ai` なしでは使えません
+- `--ai-commands-dir` は `--ai generic` のときだけ使えます
+- `--ai generic` では `--ai-commands-dir` が必須です
+- `project_name` と `--here` は同時指定できません
+
+### 2.5 実際に生成される主要パス
+
+`sdd init` が管理対象として配置する主なファイルとディレクトリは次です。
+
+```text
+.specify/
+├── glossary.md
+├── conventions/README.md
+├── project/
+│   ├── tech-stack.md
+│   ├── domain-map.md
+│   ├── coding-rules.md
+│   └── architecture-principles.md
+├── templates/
+│   ├── commands/
+│   │   ├── brief.md
+│   │   ├── common-design.md
+│   │   ├── design.md
+│   │   ├── tasks.md
+│   │   └── implement.md
+│   └── artifacts/
+│       ├── brief.md
+│       ├── common_design/
+│       └── design/
+briefs/
+designs/
+├── common_design/
+│   ├── api/
+│   ├── data/
+│   ├── module/
+│   └── ui/
+└── specific_design/
+```
+
+補足:
+
+- 現行 `init` が自動生成する project 文書は `tech-stack.md`、`domain-map.md`、`coding-rules.md`、`architecture-principles.md` です
+- `src/speckit_for_projects/templates/project/design-system.md.j2` と `src/speckit_for_projects/templates/project/ui-storybook/` はテンプレートとしては存在します
+- ただし、現行 `sdd init` の管理対象には含まれていないため、自動生成はされません
+- これは `shadcn/ui` のような外部デザインシステム採用案件では、project 独自の UI 定義書や project 共通 Storybook が不要になりうるためです
+- そのため `design-system.md` や `project/ui-storybook/` は現行の管理対象 scaffold ではありません
+
+### 2.6 既存ファイルがある場合
+
+`--force` なし:
+
+- 管理対象ファイルが既に存在すれば保持されます
+- agent 向け command / skill も既存なら保持されます
+
+`--force` あり:
+
+- 管理対象ファイルをテンプレートから再配置します
+- agent 向け command / skill も上書きします
+
+### 2.7 Git 初期化
+
+対象ディレクトリに `.git` がない場合だけ `git init` を試みます。
+
+- 既に `.git` があれば何もしません
+- `--no-git` を付けると試行しません
+- `git` コマンド自体がなくても、scaffold 導入自体は継続します
+
+## 3. `sdd check`
+
+### 3.1 役割
+
+`sdd check` は次を確認します。
+
+- 共有 scaffold の欠落
+- 指定 agent 向け command ファイルの欠落
+- 一部 agent で必要な CLI ランタイムの不足
+
+### 3.2 基本例
+
+```bash
+sdd check --ai codex
+```
+
+`generic` の場合:
+
+```bash
+sdd check --ai generic --ai-commands-dir .myagent/commands
+```
+
+### 3.3 終了コード
+
+- `0`: failure / warning なし
+- `1`: warning あり、failure なし
+- `2`: failure あり
+
+### 3.4 `warning` と `failure` の違い
+
+`warning` の例:
+
+- `codex`、`claude`、`gemini` など CLI 前提 agent の実行バイナリがローカルにない
+
+`failure` の例:
+
+- `.specify/project/tech-stack.md` がない
+- `.specify/templates/commands/design.md` がない
+- `designs/common_design/module/` がない
+- `--ai generic` なのに `--ai-commands-dir` を省略した
+- 指定 agent 向け `sdd.design.md` などの command ファイルが出力先にない
+
+### 3.5 `sdd check` が確認する共有 scaffold
+
+主に次を検査します。
+
+- `.specify/glossary.md`
+- `.specify/project/tech-stack.md`
+- `.specify/project/coding-rules.md`
+- `.specify/project/architecture-principles.md`
+- `.specify/project/domain-map.md`
+- `.specify/templates/commands/*.md`
+- `.specify/templates/artifacts/brief.md`
+- `.specify/templates/artifacts/common_design/*.md`
+- `.specify/templates/artifacts/design/` 配下の必須テンプレート
+- `briefs/`
+- `designs/common_design/` と各種サブディレクトリ
+- `designs/specific_design/`
+
+## 4. 対応 agent と出力先
+
+主な agent 出力先は次のとおりです。
+
+| agent | command / prompt 出力先 | 備考 |
+| --- | --- | --- |
+| `codex` | `.codex/prompts/` | slash command ではなく保存済み prompt 扱い |
+| `claude` | `.claude/commands/` | frontmatter wrapper |
+| `gemini` | `.gemini/commands/` | frontmatter wrapper |
+| `copilot` | `.github/agents/` | frontmatter wrapper |
+| `cursor-agent` | `.cursor/commands/` | frontmatter wrapper |
+| `opencode` | `.opencode/command/` | frontmatter wrapper |
+| `windsurf` | `.windsurf/workflows/` | frontmatter wrapper |
+| `kiro-cli` | `.kiro/prompts/` | `kiro` は alias |
+| `generic` | `--ai-commands-dir` 指定先 | plain wrapper |
+
+`--ai-skills` を使うと、基本は `.agents/skills/` 配下へ `speckit-for-projects-*` skill が入ります。`codex` も skill 出力先は `.agents/skills/` です。
+
+## 5. Codex での扱い
+
+Codex だけ少し挙動が違います。
+
+- `.codex/prompts/sdd.brief.md` などは custom slash command ではありません
+- 保存済み prompt として開くか、本文を参照して実行します
+- `--ai-skills` を付ければ `speckit-for-projects-brief` などの skill も導入できます
+
+Codex で導入後に認識が悪い場合は、セッションを開き直す方が確実です。
+
+## 6. 運用上のコマンド例
+
+初期導入:
+
+```bash
+sdd init --here --ai codex --ai-skills
+sdd check --ai codex
+```
+
+テンプレートだけ再配置したい:
+
+```bash
+sdd init --here --force
+```
+
+Codex 用 prompt / skill も含めて再配置したい:
+
+```bash
+sdd init --here --ai codex --ai-skills --force
+sdd check --ai codex
+```
+
+`generic` agent の出力先を明示して確認したい:
+
+```bash
+sdd init --here --ai generic --ai-commands-dir .myagent/commands
+sdd check --ai generic --ai-commands-dir .myagent/commands
+```
+
+## 7. 関連ドキュメント
+
+- [guides/manual.ja.md](/Users/iwasakishinya/Documents/hook/general_sdd/guides/manual.ja.md)
+- [guides/workflow-reference.ja.md](/Users/iwasakishinya/Documents/hook/general_sdd/guides/workflow-reference.ja.md)
+- [guides/troubleshooting.ja.md](/Users/iwasakishinya/Documents/hook/general_sdd/guides/troubleshooting.ja.md)

@@ -1,0 +1,18 @@
+screens:
+  - screen_id: SCR-001
+    screen_name: API Consumer Console
+    fields:
+      - field_id: FLD-001
+        field_name: external_customer_id
+        label: External Customer ID
+        type: text
+        area: request
+        io: input
+        required: true
+        validation:
+          - pattern: alphanumeric
+        default_value: null
+        source: api_request
+        api_mapping: externalCustomerId
+        data_mapping: customer.external_customer_id
+        notes: request example only

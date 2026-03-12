@@ -1,0 +1,35 @@
+:root {
+  color-scheme: light;
+  --project-bg: #f3f2ec;
+  --project-surface: #fffdf7;
+  --project-panel: #f7f4eb;
+  --project-text: #1c2430;
+  --project-muted: #667180;
+  --project-border: #d8d0bc;
+  --project-accent: #0f766e;
+  --project-success: #1d7a46;
+  --project-warning: #9a6700;
+  --project-shadow: 0 18px 40px rgba(28, 36, 48, 0.08);
+  --project-radius: 16px;
+  --project-font: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at top left, #fffaf0 0, transparent 32%),
+    linear-gradient(180deg, #fcfbf7 0%, var(--project-bg) 100%);
+  color: var(--project-text);
+  font-family: var(--project-font);
+}
+
+.project-storybook-frame {
+  padding: 24px;
+}
+
+.ds-card {
+  background: var(--project-surface);
+  border: 1px solid var(--project-border);
+  border-radius: var(--project-radius);
+  box-shadow: var(--project-shadow);
+}

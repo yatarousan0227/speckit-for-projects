@@ -1,0 +1,18 @@
+brief_id: 001-customer-api-modernization
+design_id: 001-customer-api-modernization
+common_design_refs:
+  - ref_id: CD-API-001
+    kind: api
+    usage: own
+    notes:
+      - This specific design exposes the canonical shared lookup contract.
+  - ref_id: CD-DATA-001
+    kind: data
+    usage: own
+    notes:
+      - This feature owns the shared customer profile representation.
+  - ref_id: CD-MOD-001
+    kind: module
+    usage: invoke
+    notes:
+      - Use the shared profile service boundary for orchestration.
