@@ -68,6 +68,9 @@ Responsibility split:
 The distribution package name is `speckit-for-projects`. The CLI remains `sdd`, and the
 internal Python module path is `speckit_for_projects`.
 
+The package name is reserved in project metadata, but this project is not yet published to a
+package index. For now, install and run it from a local checkout.
+
 Run from source without installing globally:
 
 ```bash
@@ -82,7 +85,7 @@ uv tool install --editable .
 sdd --help
 ```
 
-Install from a package index by name:
+After the package is published to a package index, install by name:
 
 ```bash
 uv tool install speckit-for-projects
