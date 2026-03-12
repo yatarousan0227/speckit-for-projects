@@ -1,6 +1,6 @@
 # SpecKit for Projects チュートリアル
 
-この文書は、`SpecKit for Projects` を初めて使う人向けの日本語チュートリアルです。空のリポジトリに `SpecKit for Projects` を導入し、`brief -> design -> tasks -> implement` を 1 回通すところまでを扱います。
+この文書は、`SpecKit for Projects` を初めて使う人向けの日本語チュートリアルです。空のリポジトリに `SpecKit for Projects` を導入し、`brief -> design -> tasks -> analyze -> implement` を 1 回通すところまでを扱います。
 
 ## このチュートリアルで作るもの
 
@@ -80,7 +80,7 @@ sdd init --here --ai generic --ai-commands-dir .myagent/commands
 - `briefs/`
 - `designs/`
 
-Codex では `.codex/prompts/*.md` は slash command にはなりません。`--ai-skills` を付けておくと、Codex から見つけやすい `speckit-for-projects-brief` などの skill も併せて入ります。
+Codex では `.codex/prompts/*.md` は slash command にはなりません。`--ai-skills` を付けておくと、Codex から見つけやすい `speckit-for-projects-analyze` や `speckit-for-projects-brief` などの skill も併せて入ります。
 
 ## 3. `sdd check` で導入状態を確認する
 
@@ -202,7 +202,30 @@ npm run build-storybook
 
 この段階では、task の粒度と依存順序を人間が確認してください。設計レビュー前に task を確定させすぎると、後で差し戻しが大きくなります。
 
-## 8. AI で一部タスクを実装する
+## 8. `sdd analyze` で bundle 整合を確認する
+
+`sdd check` は scaffold と agent 設定の確認ですが、ここでは生成済み成果物 bundle 自体を確認します。
+
+```bash
+sdd analyze 001-screened-application-portal
+```
+
+複数 bundle をまとめて確認したい場合:
+
+```bash
+sdd analyze --all
+```
+
+ここで確認したいポイント:
+
+- `traceability.yaml` に brief の `REQ-*` 漏れがないか
+- `tasks.md` が要件をカバーしているか
+- `common-design-refs.yaml` の `CD-*` が実在 shared design を指しているか
+- bundle 内の必須ファイルが欠けていないか
+
+`failure` が出たら、まず `traceability.yaml`、`common-design-refs.yaml`、`tasks.md` を見直してから次へ進みます。
+
+## 9. AI で一部タスクを実装する
 
 最後に `design-id` と `TASK-xxx` を指定して `sdd.implement` 相当のワークフローを実行します。
 
@@ -220,17 +243,18 @@ TASK-001 を実装して。
 - テストまたは検証コマンドが実行される
 - `designs/specific_design/<design-id>/tasks.md` の対象 task だけが更新される
 
-## 9. 再生成時の見方
+## 10. 再生成時の見方
 
 `SpecKit for Projects` は再生成を前提にしています。文書を更新したあとに見るべきポイントは次のとおりです。
 
 - `git diff` で brief / design / tasks の差分を確認する
+- `sdd analyze` の結果で category ごとの issue を確認する
 - `traceability.yaml` から要件漏れが出ていないか見る
 - `tasks.md` の task 定義と実行台帳が不自然に壊れていないか見る
 
 特に `design` は上書き再生成が前提です。人手で微修正した内容を残したい場合は、先に共通標準か brief 側へ正本として戻してください。
 
-## 10. 次に読む文書
+## 11. 次に読む文書
 
 通しで 1 回動かせたら、次は分割ガイドを読むと運用しやすくなります。
 

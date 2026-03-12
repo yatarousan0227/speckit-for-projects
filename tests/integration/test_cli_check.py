@@ -64,6 +64,20 @@ def test_check_prints_codex_usage_note():
         assert "Codex-discoverable skills" in result.stdout
 
 
+def test_check_prints_analyze_in_codex_usage_note_when_skills_exist():
+    with runner.isolated_filesystem():
+        init_result = runner.invoke(
+            app,
+            ["init", "--here", "--ai", "codex", "--ai-skills", "--no-git"],
+        )
+        assert init_result.exit_code == 0, init_result.stdout
+
+        result = runner.invoke(app, ["check", "--ai", "codex"])
+
+        assert result.exit_code in {0, 1}, result.stdout
+        assert "speckit-for-projects-analyze" in result.stdout
+
+
 def test_check_accepts_kiro_alias(monkeypatch):
     monkeypatch.setattr(
         "speckit_for_projects.services.agent_runtime.shutil.which",
@@ -81,7 +95,10 @@ def test_check_accepts_kiro_alias(monkeypatch):
 def test_check_uses_claude_local_runtime_fallback(monkeypatch, tmp_path):
     local_claude = tmp_path / "claude"
     local_claude.write_text("", encoding="utf-8")
-    monkeypatch.setattr("speckit_for_projects.services.agent_runtime.CLAUDE_LOCAL_PATH", local_claude)
+    monkeypatch.setattr(
+        "speckit_for_projects.services.agent_runtime.CLAUDE_LOCAL_PATH",
+        local_claude,
+    )
     monkeypatch.setattr("speckit_for_projects.services.agent_runtime.shutil.which", lambda _: None)
     with runner.isolated_filesystem():
         init_result = runner.invoke(app, ["init", "--here", "--ai", "claude", "--no-git"])
@@ -124,3 +141,30 @@ def test_check_generic_detects_missing_command_file():
 
         assert result.exit_code == 2, result.stdout
         assert ".myagent/commands/sdd.common-design.md" in result.stdout
+
+
+def test_check_generic_detects_missing_analyze_command_file():
+    with runner.isolated_filesystem():
+        init_result = runner.invoke(
+            app,
+            [
+                "init",
+                "--here",
+                "--ai",
+                "generic",
+                "--ai-commands-dir",
+                ".myagent/commands",
+                "--no-git",
+            ],
+        )
+        assert init_result.exit_code == 0, init_result.stdout
+
+        Path(".myagent/commands/sdd.analyze.md").unlink()
+
+        result = runner.invoke(
+            app,
+            ["check", "--ai", "generic", "--ai-commands-dir", ".myagent/commands"],
+        )
+
+        assert result.exit_code == 2, result.stdout
+        assert ".myagent/commands/sdd.analyze.md" in result.stdout

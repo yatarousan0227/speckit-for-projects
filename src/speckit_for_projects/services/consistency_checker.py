@@ -52,6 +52,8 @@ REQUIRED_SHARED_PATHS = [
     Path("designs/common_design/module"),
     Path("designs/specific_design"),
 ]
+SPECIFIC_DESIGNS_PATH = Path("designs/specific_design")
+BRIEFS_PATH = Path("briefs")
 
 REQUIRED_BUNDLE_PATHS = [
     Path("overview.md"),
@@ -130,6 +132,46 @@ class BundleValidationResult:
 def missing_shared_paths(project_dir: Path) -> list[Path]:
     """Return missing shared scaffold paths."""
     return [relative for relative in REQUIRED_SHARED_PATHS if not (project_dir / relative).exists()]
+
+
+def resolve_design_bundle_path(project_dir: Path, target: str | Path) -> Path:
+    """Resolve a design bundle from a design ID or explicit path."""
+    candidate = Path(target)
+    direct_path = candidate if candidate.is_absolute() else project_dir / candidate
+    if direct_path.exists():
+        if not direct_path.is_dir():
+            raise FileNotFoundError(f"design bundle is not a directory: {target}")
+        return direct_path
+
+    bundle_path = project_dir / SPECIFIC_DESIGNS_PATH / str(target)
+    if bundle_path.is_dir():
+        return bundle_path
+
+    raise FileNotFoundError(f"design bundle not found: {target}")
+
+
+def list_design_bundle_paths(project_dir: Path) -> list[Path]:
+    """List all specific design bundle directories under the project."""
+    designs_dir = project_dir / SPECIFIC_DESIGNS_PATH
+    if not designs_dir.is_dir():
+        raise FileNotFoundError(f"specific design directory not found: {designs_dir}")
+    return sorted(path for path in designs_dir.iterdir() if path.is_dir())
+
+
+def resolve_brief_path_for_bundle(
+    bundle_dir: Path, project_dir: Path | None = None
+) -> Path | None:
+    """Resolve the matching brief path for a design bundle when it exists."""
+    resolved_project_dir = project_dir or _discover_project_dir(
+        bundle_dir=bundle_dir,
+        brief_path=None,
+    )
+    if resolved_project_dir is None:
+        return None
+    brief_path = resolved_project_dir / BRIEFS_PATH / f"{bundle_dir.name}.md"
+    if brief_path.exists():
+        return brief_path
+    return None
 
 
 def validate_design_bundle(
@@ -218,7 +260,8 @@ def validate_design_bundle(
         has_common_design_ref = bool(COMMON_DESIGN_REF_PATTERN.search(task_content))
         if not has_specific_artifact_ref and not has_common_design_ref:
             result.invalid_structure_entries.append(
-                f"tasks must reference at least one specific artifact or common design ref: {tasks_path}"
+                "tasks must reference at least one specific artifact or common design ref: "
+                f"{tasks_path}"
             )
 
     return result
@@ -340,7 +383,8 @@ def _collect_common_design_refs(
     for index, entry in enumerate(refs, start=1):
         if not isinstance(entry, Mapping):
             result.invalid_common_design_entries.append(
-                f"common design ref entry must be a mapping at index {index}: {common_design_refs_path}"
+                "common design ref entry must be a mapping at index "
+                f"{index}: {common_design_refs_path}"
             )
             continue
         ref_id = entry.get("ref_id")

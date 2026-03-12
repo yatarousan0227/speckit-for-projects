@@ -1,6 +1,6 @@
 # SpecKit for Projects ワークフロー詳細
 
-この文書は、`brief -> common-design -> design -> tasks -> implement` の流れと、各段階の責務境界を詳しく説明します。
+この文書は、`brief -> common-design -> design -> tasks -> analyze -> implement` の流れと、各段階の責務境界を詳しく説明します。
 
 ## 1. 全体像
 
@@ -13,8 +13,9 @@
 5. 必要なら AI で `sdd.common-design`
 6. AI で `sdd.design`
 7. AI で `sdd.tasks`
-8. AI で `sdd.implement`
-9. `git diff` とレビュー
+8. `sdd analyze`
+9. AI で `sdd.implement`
+10. `git diff` とレビュー
 
 重要なのは、各段階が別の正本を持つことです。
 
@@ -22,6 +23,7 @@
 - `common_design`: 何を共有契約として再利用するか
 - `specific_design`: その feature をどう設計するか
 - `tasks`: 実装単位にどう分解するか
+- `analyze`: 生成済み bundle に整合崩れがないか
 - `implement`: 実際に何を変えてどう検証したか
 
 ## 2. Step 0: 共通標準を整える
@@ -203,7 +205,41 @@ AI に設計生成を依頼する前に、最低でも次を埋めます。
 
 task 自体が消えた場合は、既存履歴を `Archived Execution History` へ移す運用です。
 
-## 7. Step 5: `implement`
+## 7. Step 5: `analyze`
+
+### 7.1 役割
+
+`sdd analyze` は、生成済みの `specific_design` bundle が review 可能な状態かを機械的に再検査する段階です。
+
+### 7.2 `sdd check` との違い
+
+- `sdd check`: scaffold と agent 設定を見る
+- `sdd analyze`: feature ごとの成果物 bundle 整合を見る
+
+### 7.3 何を確認するか
+
+- bundle 必須ファイルの有無
+- `traceability.yaml` の構造と参照整合
+- `tasks.md` が brief の `REQ-*` をカバーしているか
+- `common-design-refs.yaml` の構造と shared design 解決可否
+- brief にある `CD-*` が bundle へ反映されているか
+
+### 7.4 実行タイミング
+
+少なくとも次のタイミングで実行します。
+
+- `sdd.design` の直後に bundle 構造を確認したいとき
+- `sdd.tasks` の直後に requirement coverage まで含めて確認したいとき
+- 複数 bundle の整合をまとめて再確認したいとき
+
+### 7.5 基本例
+
+```bash
+sdd analyze 001-screened-application-portal
+sdd analyze --all
+```
+
+## 8. Step 6: `implement`
 
 ### 7.1 役割
 
@@ -237,7 +273,7 @@ task 定義部は書き換えません。
 
 `in_progress` は、ユーザーが途中停止を明示したときだけが自然です。
 
-## 8. 再生成ポリシー
+## 9. 再生成ポリシー
 
 段階ごとの再生成方針は次です。
 
@@ -247,7 +283,7 @@ task 定義部は書き換えません。
 - `tasks`: task 定義は再生成、execution ledger は保持
 - `implement`: 選択 task の execution ledger だけ更新
 
-### 8.1 手修正を残したいとき
+### 9.1 手修正を残したいとき
 
 設計束の生成物へ直接ルールを書き足すのは弱い運用です。残したいなら、次のいずれかへ戻します。
 
@@ -256,16 +292,17 @@ task 定義部は書き換えません。
 - `briefs/*.md`
 - `designs/common_design/*.md`
 
-### 8.2 差分確認の順番
+### 9.2 差分確認の順番
 
 1. `briefs/*.md`
 2. `designs/common_design/`
 3. `designs/specific_design/<design-id>/traceability.yaml`
 4. `designs/specific_design/<design-id>/overview.md`
 5. `designs/specific_design/<design-id>/tasks.md`
-6. 実装コード
+6. `sdd analyze` の failure detail
+7. 実装コード
 
-## 9. レビュー観点
+## 10. レビュー観点
 
 ### 9.1 brief レビュー
 
@@ -285,13 +322,19 @@ task 定義部は書き換えません。
 - 各 task の設計根拠が明記されているか
 - 実装不能な task 分割になっていないか
 
-### 9.4 implement レビュー
+### 10.4 analyze レビュー
+
+- failure category が妥当な場所に出ているか
+- `traceability.yaml` と `tasks.md` の要件漏れがないか
+- shared design 参照切れがないか
+
+### 10.5 implement レビュー
 
 - 変更ファイルが task と一致しているか
 - 実施コマンドと結果が記録されているか
 - 対象外 task を巻き込んでいないか
 
-## 10. 関連ドキュメント
+## 11. 関連ドキュメント
 
 - [guides/cli-reference.ja.md](/Users/iwasakishinya/Documents/hook/general_sdd/guides/cli-reference.ja.md)
 - [guides/artifact-reference.ja.md](/Users/iwasakishinya/Documents/hook/general_sdd/guides/artifact-reference.ja.md)

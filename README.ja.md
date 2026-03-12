@@ -26,20 +26,25 @@
 
 ## 現在の CLI 範囲
 
-現行 CLI で直接実行するのは次の 2 つです。
+現行 CLI で直接実行するのは次の 3 つです。
 
 - `sdd init`
 - `sdd check`
+- `sdd analyze`
 
 その後の設計生成フローは、導入された agent 向け資材を使います。
 
+- `sdd.analyze`
 - `sdd.brief`
 - `sdd.common-design`
 - `sdd.design`
 - `sdd.tasks`
 - `sdd.implement`
 
-共有 scaffold だけ確認したい場合は、`--ai` なしで `sdd check` を実行できます。
+責務分離は次のとおりです。
+
+- `sdd check`: scaffold、ディレクトリ構成、agent 向け command、runtime 有無を確認する
+- `sdd analyze`: `specific_design` 成果物 bundle の整合性を確認する
 
 ## インストール
 
@@ -93,6 +98,12 @@ sdd init --here --ai generic --ai-commands-dir .myagent/commands
 sdd check --ai generic --ai-commands-dir .myagent/commands
 ```
 
+`designs/specific_design/<design-id>/tasks.md` まで作成したら、bundle 整合を確認します。
+
+```bash
+sdd analyze <design-id>
+```
+
 ## 何が作られるか
 
 `sdd init` で主に次が配置されます。
@@ -125,8 +136,9 @@ sdd check --ai generic --ai-commands-dir .myagent/commands
 5. 必要な場合だけ `sdd.common-design` で共有設計を作る
 6. `sdd.design` で feature 固有の設計束を作る
 7. `sdd.tasks` で `tasks.md` を作る
-8. `sdd.implement` で実装と execution ledger 更新を進める
-9. 差分を確認する
+8. `sdd analyze <design-id>` または `sdd analyze --all` で bundle 整合を確認する
+9. `sdd.implement` で実装と execution ledger 更新を進める
+10. 差分を確認する
 
 ## `sdd init` の実挙動
 
@@ -154,6 +166,27 @@ sdd check --ai generic --ai-commands-dir .myagent/commands
 - `1`: warning のみ
 - `2`: failure あり
 
+## `sdd analyze` の実挙動
+
+`sdd analyze` は `designs/specific_design/` 配下の生成済み bundle 整合を検査します。
+
+- `sdd analyze <design-id>`: `design-id` 指定で 1 bundle を検査する
+- `sdd analyze designs/specific_design/<design-id>`: path 指定で 1 bundle を検査する
+- `sdd analyze --all`: `designs/specific_design/` 配下を全件検査する
+
+主に次を確認します。
+
+- bundle 内の必須ファイル
+- `traceability.yaml` の構造と参照整合
+- `tasks.md` の requirement coverage
+- `common-design-refs.yaml` の構造と参照解決
+- 対応する brief がある場合の要件・共有設計参照の一致
+
+終了コード:
+
+- `0`: 対象 bundle がすべて整合
+- `2`: 1 件以上の bundle に issue がある、または入力不正
+
 ## ディレクトリ構成
 
 ```text
@@ -167,6 +200,7 @@ sdd check --ai generic --ai-commands-dir .myagent/commands
 │   └── architecture-principles.md
 └── templates/
     ├── commands/
+    │   ├── analyze.md
     │   ├── brief.md
     │   ├── common-design.md
     │   ├── design.md

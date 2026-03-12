@@ -24,6 +24,7 @@ MANAGED_TEMPLATES = {
         "project/architecture-principles.md.j2"
     ),
     Path(".specify/templates/commands/brief.md"): "commands/brief.md.j2",
+    Path(".specify/templates/commands/analyze.md"): "commands/analyze.md.j2",
     Path(".specify/templates/commands/common-design.md"): "commands/common-design.md.j2",
     Path(".specify/templates/commands/design.md"): "commands/design.md.j2",
     Path(".specify/templates/commands/tasks.md"): "commands/tasks.md.j2",
@@ -217,7 +218,8 @@ def _codex_usage_note(ai_skills: bool) -> str:
         return (
             "note: Codex does not register custom /sdd.* slash commands. "
             "Use `.codex/prompts/*.md` as saved prompts, or restart Codex and ask it to use "
-            "`speckit-for-projects-brief`, `speckit-for-projects-common-design`, "
+            "`speckit-for-projects-analyze`, `speckit-for-projects-brief`, "
+            "`speckit-for-projects-common-design`, "
             "`speckit-for-projects-design`, `speckit-for-projects-tasks`, "
             "or `speckit-for-projects-implement`."
         )

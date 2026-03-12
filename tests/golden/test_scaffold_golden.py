@@ -43,6 +43,10 @@ def test_command_templates_match_golden_files():
         assert result.exit_code == 0, result.stdout
 
         _assert_matches(
+            Path(".specify/templates/commands/analyze.md"),
+            EXPECTED_ROOT / "shared" / "commands" / "analyze.md",
+        )
+        _assert_matches(
             Path(".specify/templates/commands/brief.md"),
             EXPECTED_ROOT / "shared" / "commands" / "brief.md",
         )
@@ -69,6 +73,10 @@ def test_codex_agent_files_match_golden_files():
         result = runner.invoke(app, ["init", "--here", "--ai", "codex", "--no-git"])
         assert result.exit_code == 0, result.stdout
 
+        _assert_matches(
+            Path(".codex/prompts/sdd.analyze.md"),
+            EXPECTED_ROOT / "agents" / "codex" / "sdd.analyze.md",
+        )
         _assert_matches(
             Path(".codex/prompts/sdd.brief.md"),
             EXPECTED_ROOT / "agents" / "codex" / "sdd.brief.md",
@@ -108,6 +116,10 @@ def test_generic_agent_files_match_golden_files():
         assert result.exit_code == 0, result.stdout
 
         _assert_matches(
+            Path(".myagent/commands/sdd.analyze.md"),
+            EXPECTED_ROOT / "agents" / "generic" / "sdd.analyze.md",
+        )
+        _assert_matches(
             Path(".myagent/commands/sdd.brief.md"),
             EXPECTED_ROOT / "agents" / "generic" / "sdd.brief.md",
         )
@@ -135,6 +147,10 @@ def test_claude_agent_files_use_frontmatter_wrapper():
         assert result.exit_code == 0, result.stdout
 
         _assert_matches(
+            Path(".claude/commands/sdd.analyze.md"),
+            EXPECTED_ROOT / "agents" / "claude" / "sdd.analyze.md",
+        )
+        _assert_matches(
             Path(".claude/commands/sdd.brief.md"),
             EXPECTED_ROOT / "agents" / "claude" / "sdd.brief.md",
         )
@@ -145,6 +161,10 @@ def test_codex_skill_files_match_golden_files():
         result = runner.invoke(app, ["init", "--here", "--ai", "codex", "--ai-skills", "--no-git"])
         assert result.exit_code == 0, result.stdout
 
+        _assert_matches(
+            Path(".agents/skills/speckit-for-projects-analyze/SKILL.md"),
+            EXPECTED_ROOT / "skills" / "speckit-for-projects-analyze" / "SKILL.md",
+        )
         _assert_matches(
             Path(".agents/skills/speckit-for-projects-brief/SKILL.md"),
             EXPECTED_ROOT / "skills" / "speckit-for-projects-brief" / "SKILL.md",
