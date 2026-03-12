@@ -69,9 +69,10 @@ AI agent に渡す command 本文の共通ソースです。
 - `common-design.md`
 - `design.md`
 - `tasks.md`
+- `analyze.md`
 - `implement.md`
 
-agent 別の `.codex/prompts/` や `.claude/commands/` は、ここを元に生成される配布先です。
+agent 別の `.codex/prompts/` や `.claude/commands/` は、ここを元に生成される配布先です。`analyze.md` は、bundle 整合を人間にも agent にも同じ観点で確認させるための共通 command source です。
 
 ### 2.4 `.specify/templates/artifacts/`
 
@@ -266,9 +267,21 @@ npm run build-storybook
 
 要件と成果物の対応表です。要件漏れ確認の基準になります。
 
+`sdd analyze` では主に次を見ます。
+
+- すべての `REQ-*` が載っているか
+- `primary_artifact` や `related_artifacts` が空疎でないか
+- `common_design_refs` が brief と矛盾していないか
+
 ### 5.12 `tasks.md`
 
 実装タスクと実行台帳です。設計レビューだけでなく、実装フェーズの証跡にもなります。
+
+`sdd analyze` では主に次を見ます。
+
+- requirement coverage に穴がないか
+- task が参照する `REQ-*` や成果物参照が壊れていないか
+- 実装前提の bundle として review 可能な粒度になっているか
 
 ## 6. 誰がどこを触るか
 
@@ -282,6 +295,7 @@ npm run build-storybook
 AI に再生成させやすい場所:
 
 - `designs/specific_design/<design-id>/overview.md`
+- `designs/specific_design/<design-id>/common-design-refs.yaml`
 - `designs/specific_design/<design-id>/ui-fields.yaml`
 - `designs/specific_design/<design-id>/traceability.yaml`
 - `designs/specific_design/<design-id>/tasks.md`
@@ -303,5 +317,5 @@ AI に再生成させやすい場所:
 
 ## 8. 関連ドキュメント
 
-- [guides/workflow-reference.ja.md](/Users/iwasakishinya/Documents/hook/general_sdd/guides/workflow-reference.ja.md)
-- [guides/troubleshooting.ja.md](/Users/iwasakishinya/Documents/hook/general_sdd/guides/troubleshooting.ja.md)
+- [guides/workflow-reference.ja.md](workflow-reference.ja.md)
+- [guides/troubleshooting.ja.md](troubleshooting.ja.md)

@@ -105,7 +105,28 @@ sdd init --here --ai codex --ai-skills
 - 要求の話なら `briefs/` へ戻す
 - feature 設計だけなら再生成前に diff で吸い上げ先を決める
 
-## 7. `design` 生成後に `traceability.yaml` が弱い
+## 7. `sdd analyze` で failure が出る
+
+典型的な失敗カテゴリ:
+
+- `missing_files`
+- `missing_requirements`
+- `uncovered_task_requirements`
+- `invalid_traceability_entries`
+- `invalid_common_design_entries`
+- `invalid_structure_entries`
+
+対処の基本:
+
+1. まず `sdd analyze <design-id>` で単体 failure を見る
+2. `traceability.yaml` の `REQ-*` 網羅と `common_design_refs` を見直す
+3. `tasks.md` の `requirement_ids` と成果物参照を見直す
+4. `common-design-refs.yaml` が実在する `CD-*` だけを指しているか確認する
+5. 修正後に `sdd analyze <design-id>` か `sdd analyze --all` を再実行する
+
+`sdd check` が通っていても `sdd analyze` は落ちます。前者は scaffold、後者は生成成果物 bundle を見ているためです。
+
+## 8. `design` 生成後に `traceability.yaml` が弱い
 
 よくある症状:
 
@@ -119,7 +140,9 @@ sdd init --here --ai codex --ai-skills
 - brief の `Common Design References` が `none` のままになっていないか確認する
 - `designs/common_design/` 側の `CD-*` が実在するか確認する
 
-## 8. `tasks.md` の粒度が粗すぎる / 細かすぎる
+見直し後は `sdd analyze <design-id>` を再実行し、`missing_requirements` や `invalid_traceability_entries` が解消したか確認します。
+
+## 9. `tasks.md` の粒度が粗すぎる / 細かすぎる
 
 粗すぎる例:
 
@@ -136,7 +159,9 @@ sdd init --here --ai codex --ai-skills
 - `depends_on` が自然に表現できるかを見る
 - 実装担当が 1 回の集中作業で終えられるかを見る
 
-## 9. `implement` が対象外まで変更してしまう
+`sdd analyze` で `uncovered_task_requirements` が出た場合は、task 粒度より先に requirement 紐付け漏れを疑ってください。
+
+## 10. `implement` が対象外まで変更してしまう
 
 原因:
 
@@ -150,7 +175,7 @@ sdd init --here --ai codex --ai-skills
 - 実装前に `tasks.md` の対象 section を読む
 - 変更後に `git diff` と `Changed Files` を照合する
 
-## 10. Storybook が起動しない
+## 11. Storybook が起動しない
 
 まず `ui-storybook/` 配下で次を確認します。
 
@@ -167,7 +192,7 @@ npm run build-storybook
 - `.storybook/main.ts` など必須ファイルがあるか
 - story と component が最低 1 組あるか
 
-## 11. どこへ戻すべきか迷う
+## 12. どこへ戻すべきか迷う
 
 判断基準:
 
@@ -177,7 +202,7 @@ npm run build-storybook
 - feature 固有設計 -> `designs/specific_design/`
 - 実装証跡 -> `tasks.md` execution ledger
 
-## 12. 復旧の最小セット
+## 13. 復旧の最小セット
 
 状態が壊れたときは、まず次の順で戻すのが現実的です。
 
@@ -186,9 +211,10 @@ npm run build-storybook
 3. `sdd init --here [--ai ...]` で不足 scaffold を戻す
 4. 必要なら `--force` で managed file を戻す
 5. brief / common_design / specific_design の順で正本を見直す
+6. `sdd analyze <design-id>` または `sdd analyze --all` で bundle 整合を再確認する
 
-## 13. 関連ドキュメント
+## 14. 関連ドキュメント
 
-- [guides/manual.ja.md](/Users/iwasakishinya/Documents/hook/general_sdd/guides/manual.ja.md)
-- [guides/cli-reference.ja.md](/Users/iwasakishinya/Documents/hook/general_sdd/guides/cli-reference.ja.md)
-- [guides/workflow-reference.ja.md](/Users/iwasakishinya/Documents/hook/general_sdd/guides/workflow-reference.ja.md)
+- [guides/manual.ja.md](manual.ja.md)
+- [guides/cli-reference.ja.md](cli-reference.ja.md)
+- [guides/workflow-reference.ja.md](workflow-reference.ja.md)

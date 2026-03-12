@@ -4,12 +4,13 @@
 
 ## まず押さえること
 
-`SpecKit for Projects` は、CLI が全部を自動生成するツールではありません。役割は大きく 2 つです。
+`SpecKit for Projects` は、CLI が全部を自動生成するツールではありません。役割は大きく 3 つです。
 
 - `sdd init`: リポジトリへ共通 scaffold とエージェント向け prompt / command / skill を配置する
 - `sdd check`: scaffold とエージェント実行前提が揃っているかを確認する
+- `sdd analyze`: `specific_design` bundle の整合崩れを機械的に検査する
 
-実際の `brief`、`common_design`、`specific_design`、`tasks`、`implement` は、配置された command / prompt / skill を使って AI エージェント側で進めます。
+実際の `brief`、`common_design`、`specific_design`、`tasks`、`implement` は、配置された command / prompt / skill を使って AI エージェント側で進めます。CLI はその前提整備と、生成済み bundle の整合確認を担当します。
 
 ## 情報モデル
 
@@ -25,11 +26,11 @@
 
 目的別に次を参照してください。
 
-- 初回導入から 1 周したい: [guides/tutorial.ja.md](/Users/iwasakishinya/Documents/hook/general_sdd/guides/tutorial.ja.md)
-- CLI のオプションと挙動を確認したい: [guides/cli-reference.ja.md](/Users/iwasakishinya/Documents/hook/general_sdd/guides/cli-reference.ja.md)
-- `brief -> common-design -> design -> tasks -> implement` の流れを詳しく見たい: [guides/workflow-reference.ja.md](/Users/iwasakishinya/Documents/hook/general_sdd/guides/workflow-reference.ja.md)
-- 生成されるファイルの意味と正本を確認したい: [guides/artifact-reference.ja.md](/Users/iwasakishinya/Documents/hook/general_sdd/guides/artifact-reference.ja.md)
-- warning / failure や再生成事故の対処を知りたい: [guides/troubleshooting.ja.md](/Users/iwasakishinya/Documents/hook/general_sdd/guides/troubleshooting.ja.md)
+- 初回導入から 1 周したい: [guides/tutorial.ja.md](tutorial.ja.md)
+- CLI のオプションと挙動を確認したい: [guides/cli-reference.ja.md](cli-reference.ja.md)
+- `brief -> common-design -> design -> tasks -> analyze -> implement` の流れを詳しく見たい: [guides/workflow-reference.ja.md](workflow-reference.ja.md)
+- 生成されるファイルの意味と正本を確認したい: [guides/artifact-reference.ja.md](artifact-reference.ja.md)
+- warning / failure や再生成事故の対処を知りたい: [guides/troubleshooting.ja.md](troubleshooting.ja.md)
 
 ## 最短フロー
 
@@ -45,8 +46,9 @@ sdd check --ai codex
 3. 必要なら AI で `sdd.common-design`
 4. AI で `sdd.design`
 5. AI で `sdd.tasks`
-6. AI で `sdd.implement`
-7. `git diff` で差分確認
+6. `sdd analyze <design-id>` または `sdd analyze --all`
+7. AI で `sdd.implement`
+8. `git diff` で差分確認
 
 ## どこを人が管理するか
 
@@ -72,10 +74,12 @@ sdd check --ai codex
 - `designs/specific_design/<design-id>/`
 - `designs/specific_design/<design-id>/tasks.md` の task 定義部
 
-`tasks.md` のうち、実装実行後に更新されるのは execution ledger 部分だけです。詳細は [guides/workflow-reference.ja.md](/Users/iwasakishinya/Documents/hook/general_sdd/guides/workflow-reference.ja.md) を参照してください。
+`sdd analyze` が主に検査するのは `designs/specific_design/<design-id>/common-design-refs.yaml`、`traceability.yaml`、`tasks.md` を含む bundle 全体です。
+
+`tasks.md` のうち、実装実行後に更新されるのは execution ledger 部分だけです。詳細は [guides/workflow-reference.ja.md](workflow-reference.ja.md) を参照してください。
 
 ## 関連ドキュメント
 
-- [README.ja.md](/Users/iwasakishinya/Documents/hook/general_sdd/README.ja.md)
-- [examples/README.md](/Users/iwasakishinya/Documents/hook/general_sdd/examples/README.md)
-- [examples/project-standards/todo-app-ja/README.md](/Users/iwasakishinya/Documents/hook/general_sdd/examples/project-standards/todo-app-ja/README.md)
+- [README.ja.md](../README.ja.md)
+- [examples/README.md](../examples/README.md)
+- [examples/project-standards/todo-app-ja/README.md](../examples/project-standards/todo-app-ja/README.md)
