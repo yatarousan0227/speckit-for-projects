@@ -24,6 +24,19 @@ The workflow separates design truth into three layers:
 - `common_design`: shared API, data, module, and UI truth reused by multiple features
 - `specific_design`: feature-specific design derived from one brief
 
+The relationship between those design artifacts looks like this:
+
+```mermaid
+flowchart TD
+    A[project] --> B[common_design]
+    A --> C[specific_design: feature A]
+    B --> C
+    A --> D[specific_design: feature B]
+    B --> D
+    C --> E[tasks.md]
+    D --> F[tasks.md]
+```
+
 That split is the main guardrail. Shared truth lives once, and feature bundles reference it instead of copying it.
 
 ## Current CLI Scope

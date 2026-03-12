@@ -22,6 +22,19 @@
 - `common_design`: 複数 feature で再利用する共有設計
 - `specific_design`: 1 つの brief を具体化した feature 固有設計
 
+各設計成果物の関係は次のとおりです。
+
+```mermaid
+flowchart TD
+    A[project] --> B[common_design]
+    A --> C[specific_design: feature A]
+    B --> C
+    A --> D[specific_design: feature B]
+    B --> D
+    C --> E[tasks.md]
+    D --> F[tasks.md]
+```
+
 この分離により、共有設計を feature ごとに重複定義せずに済みます。
 
 ## 現在の CLI 範囲
