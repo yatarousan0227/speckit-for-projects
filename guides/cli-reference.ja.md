@@ -1,15 +1,16 @@
 # SpecKit for Projects CLI リファレンス
 
-この文書は `sdd init` と `sdd check` の詳細リファレンスです。挙動は現行 CLI 実装に合わせています。
+この文書は `sdd init`、`sdd check`、`sdd analyze` の詳細リファレンスです。挙動は現行 CLI 実装に合わせています。
 
 ## 1. コマンド一覧
 
-現行 CLI で直接実行するのは次の 2 つです。
+現行 CLI で直接実行するのは次の 3 つです。
 
 - `sdd init`
 - `sdd check`
+- `sdd analyze`
 
-`sdd.brief`、`sdd.common-design`、`sdd.design`、`sdd.tasks`、`sdd.implement` は、`init` で配置した agent 向け prompt / command / skill として使います。CLI サブコマンドではありません。
+`sdd.brief`、`sdd.common-design`、`sdd.design`、`sdd.tasks`、`sdd.implement` は、`init` で配置した agent 向け prompt / command / skill として使います。`sdd.analyze` だけは CLI サブコマンドとしても、agent 向け command としても提供されます。
 
 ## 2. `sdd init`
 
@@ -78,6 +79,7 @@ sdd init --here --ai generic --ai-commands-dir .myagent/commands
 ├── templates/
 │   ├── commands/
 │   │   ├── brief.md
+│   │   ├── analyze.md
 │   │   ├── common-design.md
 │   │   ├── design.md
 │   │   ├── tasks.md
@@ -183,7 +185,51 @@ sdd check --ai generic --ai-commands-dir .myagent/commands
 - `designs/common_design/` と各種サブディレクトリ
 - `designs/specific_design/`
 
-## 4. 対応 agent と出力先
+## 4. `sdd analyze`
+
+### 4.1 役割
+
+`sdd analyze` は `designs/specific_design/` 配下の生成済み bundle 整合を検査します。
+
+責務分離:
+
+- `sdd check`: scaffold と環境の確認
+- `sdd analyze`: feature ごとの成果物 bundle の確認
+
+### 4.2 基本例
+
+```bash
+sdd analyze 001-screened-application-portal
+sdd analyze designs/specific_design/001-screened-application-portal
+sdd analyze --all
+```
+
+### 4.3 引数とオプション
+
+- `target`: `design-id` または bundle path
+- `--all`: `designs/specific_design/` 配下を全件検査する
+- `--debug`: brief path など追加情報も表示する
+
+### 4.4 終了コード
+
+- `0`: 対象 bundle がすべて整合
+- `2`: issue あり、または入力不正
+
+### 4.5 検査内容
+
+- bundle 必須ファイルの有無
+- `traceability.yaml` の構造と common design 参照整合
+- `common-design-refs.yaml` の構造と shared design 解決可否
+- brief がある場合の `REQ-*` coverage
+- `tasks.md` が specific artifact または common design ref を参照しているか
+
+### 4.6 入力制約
+
+- `target` と `--all` は同時指定不可
+- `target` 未指定かつ `--all` なしはエラー
+- `--all` では `designs/specific_design/` が必要
+
+## 5. 対応 agent と出力先
 
 主な agent 出力先は次のとおりです。
 
@@ -201,23 +247,29 @@ sdd check --ai generic --ai-commands-dir .myagent/commands
 
 `--ai-skills` を使うと、基本は `.agents/skills/` 配下へ `speckit-for-projects-*` skill が入ります。`codex` も skill 出力先は `.agents/skills/` です。
 
-## 5. Codex での扱い
+## 6. Codex での扱い
 
 Codex だけ少し挙動が違います。
 
 - `.codex/prompts/sdd.brief.md` などは custom slash command ではありません
 - 保存済み prompt として開くか、本文を参照して実行します
-- `--ai-skills` を付ければ `speckit-for-projects-brief` などの skill も導入できます
+- `--ai-skills` を付ければ `speckit-for-projects-analyze` や `speckit-for-projects-brief` などの skill も導入できます
 
 Codex で導入後に認識が悪い場合は、セッションを開き直す方が確実です。
 
-## 6. 運用上のコマンド例
+## 7. 運用上のコマンド例
 
 初期導入:
 
 ```bash
 sdd init --here --ai codex --ai-skills
 sdd check --ai codex
+```
+
+設計 bundle を検査したい:
+
+```bash
+sdd analyze 001-screened-application-portal
 ```
 
 テンプレートだけ再配置したい:
@@ -238,9 +290,10 @@ sdd check --ai codex
 ```bash
 sdd init --here --ai generic --ai-commands-dir .myagent/commands
 sdd check --ai generic --ai-commands-dir .myagent/commands
+sdd analyze --all
 ```
 
-## 7. 関連ドキュメント
+## 8. 関連ドキュメント
 
 - [guides/manual.ja.md](/Users/iwasakishinya/Documents/hook/general_sdd/guides/manual.ja.md)
 - [guides/workflow-reference.ja.md](/Users/iwasakishinya/Documents/hook/general_sdd/guides/workflow-reference.ja.md)

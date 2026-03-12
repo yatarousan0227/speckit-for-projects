@@ -23,6 +23,13 @@ class CommandSpec:
 
 COMMAND_SPECS = (
     CommandSpec(
+        "sdd.analyze",
+        "commands/analyze.md.j2",
+        "analyze.md",
+        "Inspect design bundles and report consistency issues without rewriting artifacts.",
+        "speckit-for-projects-analyze",
+    ),
+    CommandSpec(
         "sdd.brief",
         "commands/brief.md.j2",
         "brief.md",

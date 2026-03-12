@@ -82,6 +82,7 @@ class EnvironmentChecker:
         """Describe how Codex should use generated assets."""
         skills_dir = resolve_skills_directory(project_dir, AGENT_CONFIGS["codex"])
         skill_names = [
+            "speckit-for-projects-analyze",
             "speckit-for-projects-brief",
             "speckit-for-projects-common-design",
             "speckit-for-projects-design",
@@ -91,7 +92,8 @@ class EnvironmentChecker:
         if all((skills_dir / skill_name / "SKILL.md").exists() for skill_name in skill_names):
             return (
                 "note: Codex treats `.codex/prompts/*.md` as saved prompts, not custom slash "
-                "commands. Ask Codex to use `speckit-for-projects-brief`, "
+                "commands. Ask Codex to use `speckit-for-projects-analyze`, "
+                "`speckit-for-projects-brief`, "
                 "`speckit-for-projects-common-design`, `speckit-for-projects-design`, "
                 "`speckit-for-projects-tasks`, or `speckit-for-projects-implement`, "
                 "or open the saved prompt files directly."

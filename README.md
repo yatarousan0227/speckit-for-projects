@@ -28,20 +28,25 @@ That split is the main guardrail. Shared truth lives once, and feature bundles r
 
 ## Current CLI Scope
 
-The CLI currently exposes two commands:
+The CLI currently exposes three commands:
 
 - `sdd init`
 - `sdd check`
+- `sdd analyze`
 
 The rest of the workflow is executed through the installed agent prompts and skills:
 
 - `sdd.brief`
+- `sdd.analyze`
 - `sdd.common-design`
 - `sdd.design`
 - `sdd.tasks`
 - `sdd.implement`
 
-`sdd check` can be run without `--ai` when you only want to validate the shared scaffold.
+Responsibility split:
+
+- `sdd check`: validate scaffold, directory layout, agent command files, and runtime availability
+- `sdd analyze`: validate one or more generated `specific_design` bundles and report consistency issues
 
 ## Installation
 
@@ -95,6 +100,12 @@ sdd init --here --ai generic --ai-commands-dir .myagent/commands
 sdd check --ai generic --ai-commands-dir .myagent/commands
 ```
 
+After generating `designs/specific_design/<design-id>/tasks.md`, re-check the bundle:
+
+```bash
+sdd analyze <design-id>
+```
+
 ## What Gets Generated
 
 `sdd init` prepares a repository with:
@@ -127,8 +138,9 @@ Typical outputs later created through the workflow:
 5. Generate shared design only when multiple features depend on the same truth.
 6. Generate one `specific_design` bundle from one brief.
 7. Generate `tasks.md`.
-8. Execute implementation work and update the execution ledger.
-9. Review the resulting diff.
+8. Run `sdd analyze <design-id>` or `sdd analyze --all`.
+9. Execute implementation work and update the execution ledger.
+10. Review the resulting diff.
 
 ## `sdd init` Behavior
 
@@ -156,6 +168,27 @@ Exit codes:
 - `1`: warnings only
 - `2`: one or more failures
 
+## `sdd analyze` Behavior
+
+`sdd analyze` validates generated bundle consistency under `designs/specific_design/`.
+
+- `sdd analyze <design-id>`: analyze one bundle by ID
+- `sdd analyze designs/specific_design/<design-id>`: analyze one bundle by path
+- `sdd analyze --all`: analyze every bundle under `designs/specific_design/`
+
+It checks:
+
+- required files inside the bundle
+- `traceability.yaml` structure and references
+- `tasks.md` requirement coverage
+- `common-design-refs.yaml` structure and resolvability
+- brief-to-bundle requirement and shared design alignment when the matching brief exists
+
+Exit codes:
+
+- `0`: all analyzed bundles are valid
+- `2`: one or more analyzed bundles have issues, or the input is invalid
+
 ## Repository Layout
 
 ```text
@@ -169,6 +202,7 @@ Exit codes:
 │   └── architecture-principles.md
 └── templates/
     ├── commands/
+    │   ├── analyze.md
     │   ├── brief.md
     │   ├── common-design.md
     │   ├── design.md
