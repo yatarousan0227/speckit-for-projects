@@ -4,6 +4,9 @@
 
 `SpecKit for Projects` is a lightweight CLI plus scaffold bundle for design-driven development in SI-style projects. It keeps the executable surface area small and moves most document generation into AI workflows backed by repository-managed prompts, skills, and templates.
 
+## SpecKit for Projects Official example
+https://github.com/yatarousan0227/vibe-todo
+
 ## Why This Exists
 
 Many teams want design artifacts to be regenerable, reviewable, and consistent across features, but they do not want a large framework or a document generator that owns too much of the process.

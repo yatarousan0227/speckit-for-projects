@@ -4,6 +4,9 @@
 
 `SpecKit for Projects` は、SI 型開発向けの設計駆動ワークフローをリポジトリへ導入するための、軽量な CLI と scaffold テンプレート群です。CLI 自体は最小限に保ち、実際の文書生成はリポジトリ管理された prompt / skill / template を使って AI エージェント側で進めます。
 
+## SpecKit for Projects 公式使用例
+https://github.com/yatarousan0227/vibe-todo
+
 ## このツールの役割
 
 `SpecKit for Projects` が担うのは主に次の 3 点です。
