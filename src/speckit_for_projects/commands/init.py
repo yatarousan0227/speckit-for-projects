@@ -31,6 +31,14 @@ def register_init_command(app: typer.Typer) -> None:
             "--ai-skills",
             help="Install command templates as SKILL.md files for the selected agent.",
         ),
+        project_design_system: bool = typer.Option(
+            False,
+            "--project-design-system",
+            help=(
+                "Include optional project-level design system scaffold under "
+                ".specify/project/."
+            ),
+        ),
         no_git: bool = typer.Option(False, "--no-git", help="Skip git repository initialization."),
         here: bool = typer.Option(False, "--here", help="Initialize the current directory."),
         force: bool = typer.Option(
@@ -48,6 +56,7 @@ def register_init_command(app: typer.Typer) -> None:
             ai_assistant=resolve_ai_assistant(ai_assistant),
             ai_commands_dir=ai_commands_dir,
             ai_skills=ai_skills,
+            project_design_system=project_design_system,
             no_git=no_git,
             force=force,
         )

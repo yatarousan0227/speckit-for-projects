@@ -52,6 +52,7 @@ sdd init --here --ai generic --ai-commands-dir .myagent/commands
 - `--ai <name>`: agent 種別を指定する
 - `--ai-commands-dir <path>`: `generic` 用の command 出力先
 - `--ai-skills`: command 本文を `SKILL.md` としても配置する
+- `--project-design-system`: project 層の `design-system.md` と `ui-storybook/` を追加配置する
 - `--no-git`: `.git` がない場合の `git init` を行わない
 - `--force`: 管理対象ファイルと agent 出力物を上書きする
 - `--debug`: 追加診断を出す
@@ -103,9 +104,9 @@ designs/
 
 - 現行 `init` が自動生成する project 文書は `tech-stack.md`、`domain-map.md`、`coding-rules.md`、`architecture-principles.md` です
 - `src/speckit_for_projects/templates/project/design-system.md.j2` と `src/speckit_for_projects/templates/project/ui-storybook/` はテンプレートとしては存在します
-- ただし、現行 `sdd init` の管理対象には含まれていないため、自動生成はされません
+- 既定では自動生成されませんが、`--project-design-system` を付けると管理対象として生成されます
 - これは `shadcn/ui` のような外部デザインシステム採用案件では、project 独自の UI 定義書や project 共通 Storybook が不要になりうるためです
-- そのため `design-system.md` や `project/ui-storybook/` は現行の管理対象 scaffold ではありません
+- そのため `design-system.md` や `project/ui-storybook/` は opt-in の管理対象 scaffold です
 
 ### 2.6 既存ファイルがある場合
 

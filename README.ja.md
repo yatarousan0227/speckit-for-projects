@@ -136,6 +136,11 @@ sdd analyze <design-id>
 - `designs/common_design/ui/`
 - `designs/specific_design/`
 
+`--project-design-system` を付けた場合のみ追加:
+
+- `.specify/project/design-system.md`
+- `.specify/project/ui-storybook/`
+
 運用の中で生成される代表成果物:
 
 - `briefs/<brief-id>.md`
@@ -259,10 +264,10 @@ designs/
 - skills の正本は個別の `src/.../skills/` にはありません
 - `SKILL.md` は `.specify/templates/commands/` か、その元になる `src/speckit_for_projects/templates/commands/*.j2` から生成されます
 
-また、`src/speckit_for_projects/templates/` には存在していても、現行 `sdd init` では配備しないテンプレートがあります。現時点では次が該当します。
+また、project-level design system template は `sdd init --project-design-system` で配備できます。
 
-- `src/speckit_for_projects/templates/project/design-system.md.j2`
-- `src/speckit_for_projects/templates/project/ui-storybook/*`
+さらに、`src/speckit_for_projects/templates/` には存在していても、現行 `sdd init` では配備しないテンプレートがあります。現時点では次が該当します。
+
 - `api-design.md.j2`、`data-design.md.j2`、`module-design.md.j2` などの legacy specific-design template
 
 これらはソースツリーにはありますが、現行 CLI の managed scaffold には含まれていません。

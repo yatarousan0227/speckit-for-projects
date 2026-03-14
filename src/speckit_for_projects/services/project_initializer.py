@@ -100,6 +100,51 @@ MANAGED_TEMPLATES = {
     ),
 }
 
+PROJECT_DESIGN_SYSTEM_TEMPLATES = {
+    Path(".specify/project/design-system.md"): "project/design-system.md.j2",
+    Path(".specify/project/ui-storybook/README.md"): "project/ui-storybook/README.md.j2",
+    Path(".specify/project/ui-storybook/package.json"): "project/ui-storybook/package.json.j2",
+    Path(".specify/project/ui-storybook/.storybook/main.ts"): (
+        "project/ui-storybook/.storybook/main.ts.j2"
+    ),
+    Path(".specify/project/ui-storybook/.storybook/preview.ts"): (
+        "project/ui-storybook/.storybook/preview.ts.j2"
+    ),
+    Path(".specify/project/ui-storybook/.storybook/preview.css"): (
+        "project/ui-storybook/.storybook/preview.css.j2"
+    ),
+    Path(".specify/project/ui-storybook/stories/atoms/Button.stories.js"): (
+        "project/ui-storybook/stories/atoms/Button.stories.js.j2"
+    ),
+    Path(".specify/project/ui-storybook/stories/molecules/FieldWithHint.stories.js"): (
+        "project/ui-storybook/stories/molecules/FieldWithHint.stories.js.j2"
+    ),
+    Path(".specify/project/ui-storybook/stories/organisms/TaskList.stories.js"): (
+        "project/ui-storybook/stories/organisms/TaskList.stories.js.j2"
+    ),
+    Path(".specify/project/ui-storybook/stories/templates/TaskInboxTemplate.stories.js"): (
+        "project/ui-storybook/stories/templates/TaskInboxTemplate.stories.js.j2"
+    ),
+    Path(".specify/project/ui-storybook/stories/pages/TaskInboxPage.stories.js"): (
+        "project/ui-storybook/stories/pages/TaskInboxPage.stories.js.j2"
+    ),
+    Path(".specify/project/ui-storybook/components/atoms/Button.html"): (
+        "project/ui-storybook/components/atoms/Button.html.j2"
+    ),
+    Path(".specify/project/ui-storybook/components/molecules/FieldWithHint.html"): (
+        "project/ui-storybook/components/molecules/FieldWithHint.html.j2"
+    ),
+    Path(".specify/project/ui-storybook/components/organisms/TaskList.html"): (
+        "project/ui-storybook/components/organisms/TaskList.html.j2"
+    ),
+    Path(".specify/project/ui-storybook/components/templates/TaskInboxTemplate.html"): (
+        "project/ui-storybook/components/templates/TaskInboxTemplate.html.j2"
+    ),
+    Path(".specify/project/ui-storybook/components/pages/TaskInboxPage.html"): (
+        "project/ui-storybook/components/pages/TaskInboxPage.html.j2"
+    ),
+}
+
 
 def resolve_target_directory(current_dir: Path, project_name: str | None, here: bool) -> Path:
     """Resolve the init target directory from CLI input."""
@@ -125,6 +170,7 @@ class ProjectInitializer:
         ai_assistant: str | None,
         ai_commands_dir: str | None,
         ai_skills: bool,
+        project_design_system: bool,
         no_git: bool,
         force: bool,
     ) -> None:
@@ -138,8 +184,12 @@ class ProjectInitializer:
         ensure_directory(target_dir / "designs" / "common_design" / "ui")
         ensure_directory(target_dir / "designs" / "specific_design")
 
+        managed_templates = dict(MANAGED_TEMPLATES)
+        if project_design_system:
+            managed_templates.update(PROJECT_DESIGN_SYSTEM_TEMPLATES)
+
         changes = []
-        for relative_path, template_name in MANAGED_TEMPLATES.items():
+        for relative_path, template_name in managed_templates.items():
             write_result = render_to_path(
                 target_dir / relative_path,
                 template_name,

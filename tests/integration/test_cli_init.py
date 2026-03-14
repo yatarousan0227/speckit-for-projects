@@ -19,6 +19,7 @@ def test_init_codex_creates_scaffold():
         assert "speckit-for-projects-clarify" in result.stdout
         assert Path(".specify/project/tech-stack.md").exists()
         assert Path(".specify/project/domain-map.md").exists()
+        assert not Path(".specify/project/design-system.md").exists()
         assert Path(".specify/templates/commands/analyze.md").exists()
         assert Path(".specify/templates/commands/clarify.md").exists()
         assert Path(".specify/templates/commands/common-design.md").exists()
@@ -54,6 +55,47 @@ def test_init_codex_creates_scaffold():
         assert Path("designs/common_design/api").is_dir()
         assert Path("designs/common_design/ui").is_dir()
         assert Path("designs/specific_design").is_dir()
+
+
+def test_init_project_design_system_creates_optional_project_scaffold():
+    with runner.isolated_filesystem():
+        result = runner.invoke(app, ["init", "--here", "--project-design-system", "--no-git"])
+
+        assert result.exit_code == 0, result.stdout
+        assert Path(".specify/project/design-system.md").exists()
+        assert Path(".specify/project/ui-storybook/README.md").exists()
+        assert Path(".specify/project/ui-storybook/package.json").exists()
+        assert Path(".specify/project/ui-storybook/.storybook/main.ts").exists()
+        assert Path(".specify/project/ui-storybook/.storybook/preview.ts").exists()
+        assert Path(".specify/project/ui-storybook/.storybook/preview.css").exists()
+        assert Path(
+            ".specify/project/ui-storybook/stories/atoms/Button.stories.js"
+        ).exists()
+        assert Path(
+            ".specify/project/ui-storybook/stories/molecules/FieldWithHint.stories.js"
+        ).exists()
+        assert Path(
+            ".specify/project/ui-storybook/stories/organisms/TaskList.stories.js"
+        ).exists()
+        assert Path(
+            ".specify/project/ui-storybook/stories/templates/TaskInboxTemplate.stories.js"
+        ).exists()
+        assert Path(
+            ".specify/project/ui-storybook/stories/pages/TaskInboxPage.stories.js"
+        ).exists()
+        assert Path(".specify/project/ui-storybook/components/atoms/Button.html").exists()
+        assert Path(
+            ".specify/project/ui-storybook/components/molecules/FieldWithHint.html"
+        ).exists()
+        assert Path(
+            ".specify/project/ui-storybook/components/organisms/TaskList.html"
+        ).exists()
+        assert Path(
+            ".specify/project/ui-storybook/components/templates/TaskInboxTemplate.html"
+        ).exists()
+        assert Path(
+            ".specify/project/ui-storybook/components/pages/TaskInboxPage.html"
+        ).exists()
 
 
 def test_init_generic_writes_to_custom_commands_dir():
@@ -103,6 +145,26 @@ def test_init_rerun_keeps_then_overwrites_managed_files():
         assert third.exit_code == 0, third.stdout
         assert "Document the canonical runtime" in tech_stack.read_text(encoding="utf-8")
         assert "custom skill\n" != skill_file.read_text(encoding="utf-8")
+
+
+def test_init_project_design_system_rerun_keeps_then_overwrites_optional_files():
+    with runner.isolated_filesystem():
+        first = runner.invoke(app, ["init", "--here", "--project-design-system", "--no-git"])
+        assert first.exit_code == 0, first.stdout
+
+        design_system = Path(".specify/project/design-system.md")
+        design_system.write_text("custom design system\n", encoding="utf-8")
+
+        second = runner.invoke(app, ["init", "--here", "--project-design-system", "--no-git"])
+        assert second.exit_code == 0, second.stdout
+        assert design_system.read_text(encoding="utf-8") == "custom design system\n"
+
+        third = runner.invoke(
+            app,
+            ["init", "--here", "--project-design-system", "--no-git", "--force"],
+        )
+        assert third.exit_code == 0, third.stdout
+        assert "Design System" in design_system.read_text(encoding="utf-8")
 
 
 def test_init_kiro_alias_creates_prompts_and_skills():

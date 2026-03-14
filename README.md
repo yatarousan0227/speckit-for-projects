@@ -138,6 +138,11 @@ sdd analyze <design-id>
 - `designs/common_design/ui/`
 - `designs/specific_design/`
 
+Optional with `--project-design-system`:
+
+- `.specify/project/design-system.md`
+- `.specify/project/ui-storybook/`
+
 Typical outputs later created through the workflow:
 
 - `briefs/<brief-id>.md`
@@ -260,11 +265,11 @@ Important detail: checked-in skills are not the source of truth. Skills are gene
 
 Also note that some templates exist in `src/speckit_for_projects/templates/` but are not currently installed by `sdd init`. In the current implementation that includes:
 
-- `src/speckit_for_projects/templates/project/design-system.md.j2`
-- `src/speckit_for_projects/templates/project/ui-storybook/*`
 - legacy specific-design templates such as `api-design.md.j2`, `data-design.md.j2`, and `module-design.md.j2`
 
-Those files exist in the source tree, but they are not part of the managed scaffold written by the current CLI.
+Project-level design system templates are available through `sdd init --project-design-system`.
+
+The legacy specific-design templates listed above exist in the source tree, but they are not part of the managed scaffold written by the current CLI.
 
 ## Examples And Guides
 

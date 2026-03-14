@@ -133,6 +133,8 @@ def test_missing_shared_paths_allows_optional_common_design_ui_directory(tmp_pat
         ".specify/project/architecture-principles.md",
         ".specify/project/domain-map.md",
         ".specify/templates/commands/brief.md",
+        ".specify/templates/commands/analyze.md",
+        ".specify/templates/commands/clarify.md",
         ".specify/templates/commands/common-design.md",
         ".specify/templates/commands/design.md",
         ".specify/templates/commands/tasks.md",

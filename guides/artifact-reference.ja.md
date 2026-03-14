@@ -35,7 +35,7 @@ designs/
 - `src/speckit_for_projects/templates/project/design-system.md.j2`
 - `src/speckit_for_projects/templates/project/ui-storybook/`
 
-ただし、これらは現行 `sdd init` / `sdd check` の managed scaffold には入っていません。`shadcn/ui` のような外部デザインシステム採用案件では project 独自の UI 定義書が不要になりうるため、任意扱いにしている project UI 定義です。
+これらは既定の `sdd init` / `sdd check` の managed scaffold には入りませんが、`sdd init --project-design-system` を付けると managed scaffold として配置されます。`shadcn/ui` のような外部デザインシステム採用案件では project 独自の UI 定義書が不要になりうるため、既定では任意扱いにしている project UI 定義です。
 
 ここに書くべき内容:
 

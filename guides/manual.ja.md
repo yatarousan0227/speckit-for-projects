@@ -66,7 +66,7 @@ sdd check --ai codex
 補足:
 
 - project 層の UI 系文書として `src/speckit_for_projects/templates/project/design-system.md.j2` と `src/speckit_for_projects/templates/project/ui-storybook/` は存在します
-- ただし現行の `sdd init` / `sdd check` はそれらを管理対象 scaffold としては配備しません
+- 既定では配備しませんが、`sdd init --project-design-system` を付けると管理対象 scaffold として配備します
 - 理由は、`shadcn/ui` のような外部デザインシステムを採用する案件では project 独自の UI 定義書が不要になりうるためです
 - そのため、現状の公式 scaffold として必須扱いしているのは上の project 文書群です
 

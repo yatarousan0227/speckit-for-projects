@@ -37,6 +37,21 @@ def test_project_templates_match_golden_files():
         )
 
 
+def test_project_design_system_templates_match_golden_files():
+    with runner.isolated_filesystem():
+        result = runner.invoke(app, ["init", "--here", "--project-design-system", "--no-git"])
+        assert result.exit_code == 0, result.stdout
+
+        _assert_matches(
+            Path(".specify/project/design-system.md"),
+            EXPECTED_ROOT / "shared" / "project" / "design-system.md",
+        )
+        _assert_matches(
+            Path(".specify/project/ui-storybook/README.md"),
+            EXPECTED_ROOT / "shared" / "project" / "ui-storybook" / "README.md",
+        )
+
+
 def test_command_templates_match_golden_files():
     with runner.isolated_filesystem():
         result = runner.invoke(app, ["init", "--here", "--no-git"])
