@@ -1,6 +1,6 @@
 # SpecKit for Projects ワークフロー詳細
 
-この文書は、`brief -> common-design -> design -> tasks -> analyze -> implement` の流れと、各段階の責務境界を詳しく説明します。
+この文書は、`brief -> clarify -> common-design -> design -> tasks -> analyze -> implement` の流れと、各段階の責務境界を詳しく説明します。
 
 ## 1. 全体像
 
@@ -10,16 +10,18 @@
 2. 共通標準を整備
 3. `sdd check`
 4. AI で `sdd.brief`
-5. 必要なら AI で `sdd.common-design`
-6. AI で `sdd.design`
-7. AI で `sdd.tasks`
-8. `sdd analyze`
-9. AI で `sdd.implement`
-10. `git diff` とレビュー
+5. 必要なら AI で `sdd.clarify`
+6. 必要なら AI で `sdd.common-design`
+7. AI で `sdd.design`
+8. AI で `sdd.tasks`
+9. `sdd analyze`
+10. AI で `sdd.implement`
+11. `git diff` とレビュー
 
 重要なのは、各段階が別の正本を持つことです。
 
 - `brief`: 何を満たすか
+- `clarify`: 何が曖昧で、設計前に何を確定すべきか
 - `common_design`: 何を共有契約として再利用するか
 - `specific_design`: その feature をどう設計するか
 - `tasks`: 実装単位にどう分解するか
@@ -82,7 +84,36 @@ AI に設計生成を依頼する前に、最低でも次を埋めます。
 - 共通設計に依存する場合だけ `CD-*` を書きます
 - 共有設計がまだないなら `none` でも構いません
 
-## 4. Step 2: `common-design`
+## 4. Step 2: `clarify`
+
+### 4.1 役割
+
+`clarify` は、`brief` 作成直後または `design` 着手直前に、曖昧な要求や不足前提を質問化する段階です。
+
+### 4.2 何を詰めるか
+
+- `Domain Alignment` が `.specify/project/domain-map.md` と矛盾していないか
+- `Common Design References` に不足や過剰参照がないか
+- 利用者、外部連携、境界条件、運用制約が抜けていないか
+- `REQ-*` が testable な文になっているか
+
+### 4.3 出力の扱い
+
+`clarify` の初版は read-only です。`briefs/*.md` や `designs/common_design/` を直接更新せず、次を返します。
+
+- blocking な質問
+- non-blocking な tightening 提案
+- requirement wording の言い換え案
+- 次に進むべき step
+
+### 4.4 `analyze` との違い
+
+- `clarify`: 設計前の曖昧さを質問化する
+- `analyze`: 生成済み bundle の整合崩れを検査する
+
+`clarify` は `brief` の代替ではなく、`design` 前の品質調整ステップです。
+
+## 5. Step 3: `common-design`
 
 ### 4.1 役割
 
@@ -117,7 +148,7 @@ AI に設計生成を依頼する前に、最低でも次を埋めます。
 - `CD-UI-001-screen-catalog.md` -> `designs/common_design/ui/`
 - `CD-UI-002-navigation-rules.md` -> `designs/common_design/ui/`
 
-## 5. Step 3: `design`
+## 6. Step 4: `design`
 
 ### 5.1 役割
 
@@ -170,7 +201,7 @@ AI に設計生成を依頼する前に、最低でも次を埋めます。
 - 使い方の feature 固有メモを残す
 - `specific_design` から `common_design` を辿りやすくする
 
-## 6. Step 4: `tasks`
+## 7. Step 5: `tasks`
 
 ### 6.1 役割
 
@@ -205,7 +236,7 @@ AI に設計生成を依頼する前に、最低でも次を埋めます。
 
 task 自体が消えた場合は、既存履歴を `Archived Execution History` へ移す運用です。
 
-## 7. Step 5: `analyze`
+## 8. Step 6: `analyze`
 
 ### 7.1 役割
 
@@ -239,7 +270,7 @@ sdd analyze 001-screened-application-portal
 sdd analyze --all
 ```
 
-## 8. Step 6: `implement`
+## 9. Step 7: `implement`
 
 ### 7.1 役割
 

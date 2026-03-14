@@ -12,7 +12,7 @@
 - 使う AI エージェント向けの prompt / skill を配置する
 - そのワークフローが成立する状態かを検査する
 
-逆に、設計文書そのものを CLI が全部自動生成するわけではありません。`brief`、`common_design`、`specific_design`、`tasks`、`implement` は、`sdd init` で配置した agent 向け command / prompt / skill を使って進めます。
+逆に、設計文書そのものを CLI が全部自動生成するわけではありません。`brief`、`clarify`、`common_design`、`specific_design`、`tasks`、`implement` は、`sdd init` で配置した agent 向け command / prompt / skill を使って進めます。
 
 ## 情報モデル
 
@@ -49,6 +49,7 @@ flowchart TD
 
 - `sdd.analyze`
 - `sdd.brief`
+- `sdd.clarify`
 - `sdd.common-design`
 - `sdd.design`
 - `sdd.tasks`
@@ -57,6 +58,7 @@ flowchart TD
 責務分離は次のとおりです。
 
 - `sdd check`: scaffold、ディレクトリ構成、agent 向け command、runtime 有無を確認する
+- `sdd.clarify`: `brief` や共有設計前提の曖昧さを、`design` 前に詰める
 - `sdd analyze`: `specific_design` 成果物 bundle の整合性を確認する
 
 ## インストール
@@ -149,12 +151,13 @@ sdd analyze <design-id>
 2. `sdd check` を実行する
 3. `.specify/project/*.md` と `.specify/glossary.md` を埋める
 4. `sdd.brief` で brief を作る
-5. 必要な場合だけ `sdd.common-design` で共有設計を作る
-6. `sdd.design` で feature 固有の設計束を作る
-7. `sdd.tasks` で `tasks.md` を作る
-8. `sdd analyze <design-id>` または `sdd analyze --all` で bundle 整合を確認する
-9. `sdd.implement` で実装と execution ledger 更新を進める
-10. 差分を確認する
+5. brief が曖昧なら `sdd.clarify` で論点を詰める
+6. 必要な場合だけ `sdd.common-design` で共有設計を作る
+7. `sdd.design` で feature 固有の設計束を作る
+8. `sdd.tasks` で `tasks.md` を作る
+9. `sdd analyze <design-id>` または `sdd analyze --all` で bundle 整合を確認する
+10. `sdd.implement` で実装と execution ledger 更新を進める
+11. 差分を確認する
 
 ## `sdd init` の実挙動
 
@@ -218,6 +221,7 @@ sdd analyze <design-id>
     ├── commands/
     │   ├── analyze.md
     │   ├── brief.md
+    │   ├── clarify.md
     │   ├── common-design.md
     │   ├── design.md
     │   ├── tasks.md

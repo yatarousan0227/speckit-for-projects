@@ -51,6 +51,10 @@ def test_command_templates_match_golden_files():
             EXPECTED_ROOT / "shared" / "commands" / "brief.md",
         )
         _assert_matches(
+            Path(".specify/templates/commands/clarify.md"),
+            EXPECTED_ROOT / "shared" / "commands" / "clarify.md",
+        )
+        _assert_matches(
             Path(".specify/templates/commands/common-design.md"),
             EXPECTED_ROOT / "shared" / "commands" / "common-design.md",
         )
@@ -80,6 +84,10 @@ def test_codex_agent_files_match_golden_files():
         _assert_matches(
             Path(".codex/prompts/sdd.brief.md"),
             EXPECTED_ROOT / "agents" / "codex" / "sdd.brief.md",
+        )
+        _assert_matches(
+            Path(".codex/prompts/sdd.clarify.md"),
+            EXPECTED_ROOT / "agents" / "codex" / "sdd.clarify.md",
         )
         _assert_matches(
             Path(".codex/prompts/sdd.common-design.md"),
@@ -124,6 +132,10 @@ def test_generic_agent_files_match_golden_files():
             EXPECTED_ROOT / "agents" / "generic" / "sdd.brief.md",
         )
         _assert_matches(
+            Path(".myagent/commands/sdd.clarify.md"),
+            EXPECTED_ROOT / "agents" / "generic" / "sdd.clarify.md",
+        )
+        _assert_matches(
             Path(".myagent/commands/sdd.common-design.md"),
             EXPECTED_ROOT / "agents" / "generic" / "sdd.common-design.md",
         )
@@ -154,6 +166,10 @@ def test_claude_agent_files_use_frontmatter_wrapper():
             Path(".claude/commands/sdd.brief.md"),
             EXPECTED_ROOT / "agents" / "claude" / "sdd.brief.md",
         )
+        _assert_matches(
+            Path(".claude/commands/sdd.clarify.md"),
+            EXPECTED_ROOT / "agents" / "claude" / "sdd.clarify.md",
+        )
 
 
 def test_codex_skill_files_match_golden_files():
@@ -168,6 +184,10 @@ def test_codex_skill_files_match_golden_files():
         _assert_matches(
             Path(".agents/skills/speckit-for-projects-brief/SKILL.md"),
             EXPECTED_ROOT / "skills" / "speckit-for-projects-brief" / "SKILL.md",
+        )
+        _assert_matches(
+            Path(".agents/skills/speckit-for-projects-clarify/SKILL.md"),
+            EXPECTED_ROOT / "skills" / "speckit-for-projects-clarify" / "SKILL.md",
         )
         _assert_matches(
             Path(".agents/skills/speckit-for-projects-common-design/SKILL.md"),

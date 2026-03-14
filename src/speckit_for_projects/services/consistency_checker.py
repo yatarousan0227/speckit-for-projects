@@ -19,6 +19,8 @@ REQUIRED_SHARED_PATHS = [
     Path(".specify/project/architecture-principles.md"),
     Path(".specify/project/domain-map.md"),
     Path(".specify/templates/commands/brief.md"),
+    Path(".specify/templates/commands/analyze.md"),
+    Path(".specify/templates/commands/clarify.md"),
     Path(".specify/templates/commands/common-design.md"),
     Path(".specify/templates/commands/design.md"),
     Path(".specify/templates/commands/tasks.md"),

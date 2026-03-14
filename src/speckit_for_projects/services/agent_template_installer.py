@@ -37,6 +37,13 @@ COMMAND_SPECS = (
         "speckit-for-projects-brief",
     ),
     CommandSpec(
+        "sdd.clarify",
+        "commands/clarify.md.j2",
+        "clarify.md",
+        "Clarify ambiguous requirements before brief or design work continues.",
+        "speckit-for-projects-clarify",
+    ),
+    CommandSpec(
         "sdd.common-design",
         "commands/common-design.md.j2",
         "common-design.md",

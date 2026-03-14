@@ -14,7 +14,7 @@ Many teams want design artifacts to be regenerable, reviewable, and consistent a
 - install agent-facing prompts or skills for the AI tool you use
 - validate that the repository still has the files needed for the workflow
 
-It does not try to replace the actual design work. The `brief`, `common_design`, `specific_design`, `tasks`, and `implement` steps are driven by the prompts and skills that `sdd init` installs.
+It does not try to replace the actual design work. The `brief`, `clarify`, `common_design`, `specific_design`, `tasks`, and `implement` steps are driven by the prompts and skills that `sdd init` installs.
 
 ## Information Model
 
@@ -50,6 +50,7 @@ The CLI currently exposes three commands:
 The rest of the workflow is executed through the installed agent prompts and skills:
 
 - `sdd.brief`
+- `sdd.clarify`
 - `sdd.analyze`
 - `sdd.common-design`
 - `sdd.design`
@@ -59,6 +60,7 @@ The rest of the workflow is executed through the installed agent prompts and ski
 Responsibility split:
 
 - `sdd check`: validate scaffold, directory layout, agent command files, and runtime availability
+- `sdd.clarify`: tighten ambiguous requirements and shared design assumptions before design starts
 - `sdd analyze`: validate one or more generated `specific_design` bundles and report consistency issues
 
 ## Installation
@@ -151,12 +153,13 @@ Typical outputs later created through the workflow:
 2. Run `sdd check`.
 3. Fill `.specify/project/*.md` and `.specify/glossary.md`.
 4. Generate one brief with `sdd.brief`.
-5. Generate shared design only when multiple features depend on the same truth.
-6. Generate one `specific_design` bundle from one brief.
-7. Generate `tasks.md`.
-8. Run `sdd analyze <design-id>` or `sdd analyze --all`.
-9. Execute implementation work and update the execution ledger.
-10. Review the resulting diff.
+5. If the brief is still ambiguous, run `sdd.clarify` before design starts.
+6. Generate shared design only when multiple features depend on the same truth.
+7. Generate one `specific_design` bundle from one brief.
+8. Generate `tasks.md`.
+9. Run `sdd analyze <design-id>` or `sdd analyze --all`.
+10. Execute implementation work and update the execution ledger.
+11. Review the resulting diff.
 
 ## `sdd init` Behavior
 
@@ -220,6 +223,7 @@ Exit codes:
     ├── commands/
     │   ├── analyze.md
     │   ├── brief.md
+    │   ├── clarify.md
     │   ├── common-design.md
     │   ├── design.md
     │   ├── tasks.md

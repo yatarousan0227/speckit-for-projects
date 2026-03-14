@@ -10,7 +10,7 @@
 - `sdd check`: scaffold とエージェント実行前提が揃っているかを確認する
 - `sdd analyze`: `specific_design` bundle の整合崩れを機械的に検査する
 
-実際の `brief`、`common_design`、`specific_design`、`tasks`、`implement` は、配置された command / prompt / skill を使って AI エージェント側で進めます。CLI はその前提整備と、生成済み bundle の整合確認を担当します。
+実際の `brief`、`clarify`、`common_design`、`specific_design`、`tasks`、`implement` は、配置された command / prompt / skill を使って AI エージェント側で進めます。CLI はその前提整備と、生成済み bundle の整合確認を担当します。
 
 ## 情報モデル
 
@@ -28,7 +28,7 @@
 
 - 初回導入から 1 周したい: [guides/tutorial.ja.md](tutorial.ja.md)
 - CLI のオプションと挙動を確認したい: [guides/cli-reference.ja.md](cli-reference.ja.md)
-- `brief -> common-design -> design -> tasks -> analyze -> implement` の流れを詳しく見たい: [guides/workflow-reference.ja.md](workflow-reference.ja.md)
+- `brief -> clarify -> common-design -> design -> tasks -> analyze -> implement` の流れを詳しく見たい: [guides/workflow-reference.ja.md](workflow-reference.ja.md)
 - 生成されるファイルの意味と正本を確認したい: [guides/artifact-reference.ja.md](artifact-reference.ja.md)
 - warning / failure や再生成事故の対処を知りたい: [guides/troubleshooting.ja.md](troubleshooting.ja.md)
 
@@ -43,12 +43,13 @@ sdd check --ai codex
 
 1. `.specify/project/` と `.specify/glossary.md` を埋める
 2. AI で `sdd.brief`
-3. 必要なら AI で `sdd.common-design`
-4. AI で `sdd.design`
-5. AI で `sdd.tasks`
-6. `sdd analyze <design-id>` または `sdd analyze --all`
-7. AI で `sdd.implement`
-8. `git diff` で差分確認
+3. 必要なら AI で `sdd.clarify`
+4. 必要なら AI で `sdd.common-design`
+5. AI で `sdd.design`
+6. AI で `sdd.tasks`
+7. `sdd analyze <design-id>` または `sdd analyze --all`
+8. AI で `sdd.implement`
+9. `git diff` で差分確認
 
 ## どこを人が管理するか
 
@@ -74,7 +75,7 @@ sdd check --ai codex
 - `designs/specific_design/<design-id>/`
 - `designs/specific_design/<design-id>/tasks.md` の task 定義部
 
-`sdd analyze` が主に検査するのは `designs/specific_design/<design-id>/common-design-refs.yaml`、`traceability.yaml`、`tasks.md` を含む bundle 全体です。
+`sdd.clarify` は `brief` と shared design 前提の曖昧さを設計前に詰めるための step で、`sdd analyze` が主に検査するのは `designs/specific_design/<design-id>/common-design-refs.yaml`、`traceability.yaml`、`tasks.md` を含む bundle 全体です。
 
 `tasks.md` のうち、実装実行後に更新されるのは execution ledger 部分だけです。詳細は [guides/workflow-reference.ja.md](workflow-reference.ja.md) を参照してください。
 

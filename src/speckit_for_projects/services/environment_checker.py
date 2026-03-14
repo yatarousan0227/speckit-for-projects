@@ -84,6 +84,7 @@ class EnvironmentChecker:
         skill_names = [
             "speckit-for-projects-analyze",
             "speckit-for-projects-brief",
+            "speckit-for-projects-clarify",
             "speckit-for-projects-common-design",
             "speckit-for-projects-design",
             "speckit-for-projects-tasks",
@@ -94,6 +95,7 @@ class EnvironmentChecker:
                 "note: Codex treats `.codex/prompts/*.md` as saved prompts, not custom slash "
                 "commands. Ask Codex to use `speckit-for-projects-analyze`, "
                 "`speckit-for-projects-brief`, "
+                "`speckit-for-projects-clarify`, "
                 "`speckit-for-projects-common-design`, `speckit-for-projects-design`, "
                 "`speckit-for-projects-tasks`, or `speckit-for-projects-implement`, "
                 "or open the saved prompt files directly."

@@ -64,7 +64,7 @@ def test_check_prints_codex_usage_note():
         assert "Codex-discoverable skills" in result.stdout
 
 
-def test_check_prints_analyze_in_codex_usage_note_when_skills_exist():
+def test_check_prints_clarify_and_analyze_in_codex_usage_note_when_skills_exist():
     with runner.isolated_filesystem():
         init_result = runner.invoke(
             app,
@@ -76,6 +76,7 @@ def test_check_prints_analyze_in_codex_usage_note_when_skills_exist():
 
         assert result.exit_code in {0, 1}, result.stdout
         assert "speckit-for-projects-analyze" in result.stdout
+        assert "speckit-for-projects-clarify" in result.stdout
 
 
 def test_check_accepts_kiro_alias(monkeypatch):
@@ -168,3 +169,30 @@ def test_check_generic_detects_missing_analyze_command_file():
 
         assert result.exit_code == 2, result.stdout
         assert ".myagent/commands/sdd.analyze.md" in result.stdout
+
+
+def test_check_generic_detects_missing_clarify_command_file():
+    with runner.isolated_filesystem():
+        init_result = runner.invoke(
+            app,
+            [
+                "init",
+                "--here",
+                "--ai",
+                "generic",
+                "--ai-commands-dir",
+                ".myagent/commands",
+                "--no-git",
+            ],
+        )
+        assert init_result.exit_code == 0, init_result.stdout
+
+        Path(".myagent/commands/sdd.clarify.md").unlink()
+
+        result = runner.invoke(
+            app,
+            ["check", "--ai", "generic", "--ai-commands-dir", ".myagent/commands"],
+        )
+
+        assert result.exit_code == 2, result.stdout
+        assert ".myagent/commands/sdd.clarify.md" in result.stdout
