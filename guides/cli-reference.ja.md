@@ -1,6 +1,6 @@
 # SpecKit for Projects CLI リファレンス
 
-この文書は `sdd init`、`sdd check`、`sdd analyze` の詳細リファレンスです。あわせて、CLI ではなく agent command / skill として使う `sdd.clarify` の位置づけも説明します。挙動は現行実装に合わせています。
+この文書は `sdd init`、`sdd check`、`sdd analyze` の詳細リファレンスです。あわせて、CLI ではなく agent command / skill として使う `sdd.clarify`、`sdd.debug`、`sdd.reflect` の位置づけも説明します。挙動は現行実装に合わせています。
 
 ## 1. コマンド一覧
 
@@ -10,7 +10,7 @@
 - `sdd check`
 - `sdd analyze`
 
-`sdd.brief`、`sdd.clarify`、`sdd.common-design`、`sdd.design`、`sdd.tasks`、`sdd.implement` は、`init` で配置した agent 向け prompt / command / skill として使います。`sdd.analyze` だけは CLI サブコマンドとしても、agent 向け command としても提供されます。
+`sdd.brief`、`sdd.clarify`、`sdd.common-design`、`sdd.design`、`sdd.debug`、`sdd.tasks`、`sdd.implement`、`sdd.reflect` は、`init` で配置した agent 向け prompt / command / skill として使います。`sdd.analyze` だけは CLI サブコマンドとしても、agent 向け command としても提供されます。
 
 ## 2. `sdd init`
 
@@ -84,8 +84,10 @@ sdd init --here --ai generic --ai-commands-dir .myagent/commands
 │   │   ├── clarify.md
 │   │   ├── common-design.md
 │   │   ├── design.md
+│   │   ├── debug.md
 │   │   ├── tasks.md
-│   │   └── implement.md
+│   │   ├── implement.md
+│   │   └── reflect.md
 │   └── artifacts/
 │       ├── brief.md
 │       ├── common_design/
@@ -231,13 +233,13 @@ sdd analyze --all
 - `target` 未指定かつ `--all` なしはエラー
 - `--all` では `designs/specific_design/` が必要
 
-## 5. `sdd.clarify`
+## 5. Agent 向け追加ワークフロー
 
-### 5.1 位置づけ
+### 5.1 `sdd.clarify`
 
 `sdd.clarify` は CLI サブコマンドではありません。`init` で配置される agent 向け command / prompt / skill として使います。
 
-### 5.2 役割
+### 5.2 `sdd.clarify` の役割
 
 `brief` 作成直後や `design` 着手前に、次の曖昧さを整理します。
 
@@ -246,15 +248,35 @@ sdd analyze --all
 - 利用者、外部連携、境界条件、運用制約
 - `REQ-*` の testable 性
 
-### 5.3 初版の制約
+### 5.3 `sdd.clarify` の制約
 
 - read-only で使う
 - `briefs/*.md` や `designs/common_design/` を直接更新しない
 - blocking 質問と non-blocking 提案を分けて返す
 
-### 5.4 `sdd analyze` との違い
+### 5.4 `sdd.debug`
+
+`sdd.debug` も CLI サブコマンドではなく、agent 向け workflow として使います。
+
+- 不具合起因のコード修正を進める
+- 必要なテスト更新と検証実行を行う
+- 影響した `designs/specific_design/`、`designs/common_design/`、`tasks.md` を同期する
+- `briefs/*.md` は更新しない
+
+### 5.5 `sdd.reflect`
+
+`sdd.reflect` は current working tree diff を truth source として扱う同期用 workflow です。
+
+- 開発者が手動で修正したコード差分を見る
+- 未更新または不完全な `specific_design`、`common_design`、`tasks.md` を補正する
+- 必要なら task 定義も追加・再生成する
+- `briefs/*.md` は更新しない
+
+### 5.6 `sdd analyze` との違い
 
 - `sdd.clarify`: 設計前の曖昧さを詰める
+- `sdd.debug`: 不具合修正と設計同期を一連で行う
+- `sdd.reflect`: 手動コード差分に設計書を追随させる
 - `sdd.analyze`: 生成後の成果物 bundle を検査する
 
 ## 6. 対応 agent と出力先
@@ -281,7 +303,7 @@ Codex だけ少し挙動が違います。
 
 - `.codex/prompts/sdd.brief.md` などは custom slash command ではありません
 - 保存済み prompt として開くか、本文を参照して実行します
-- `--ai-skills` を付ければ `speckit-for-projects-analyze`、`speckit-for-projects-brief`、`speckit-for-projects-clarify` などの skill も導入できます
+- `--ai-skills` を付ければ `speckit-for-projects-analyze`、`speckit-for-projects-brief`、`speckit-for-projects-clarify`、`speckit-for-projects-debug`、`speckit-for-projects-reflect` などの skill も導入できます
 
 Codex で導入後に認識が悪い場合は、セッションを開き直す方が確実です。
 
@@ -321,10 +343,10 @@ sdd check --ai generic --ai-commands-dir .myagent/commands
 sdd analyze --all
 ```
 
-`clarify` は CLI から直接実行せず、生成された `sdd.clarify.md` または `speckit-for-projects-clarify` skill を agent 側で使います。
+`clarify`、`debug`、`reflect` は CLI から直接実行せず、生成された `sdd.*.md` または `speckit-for-projects-*` skill を agent 側で使います。
 
 ## 9. 関連ドキュメント
 
-- [guides/manual.ja.md](/Users/iwasakishinya/Documents/hook/general_sdd/guides/manual.ja.md)
-- [guides/workflow-reference.ja.md](/Users/iwasakishinya/Documents/hook/general_sdd/guides/workflow-reference.ja.md)
-- [guides/troubleshooting.ja.md](/Users/iwasakishinya/Documents/hook/general_sdd/guides/troubleshooting.ja.md)
+- [guides/manual.ja.md](manual.ja.md)
+- [guides/workflow-reference.ja.md](workflow-reference.ja.md)
+- [guides/troubleshooting.ja.md](troubleshooting.ja.md)

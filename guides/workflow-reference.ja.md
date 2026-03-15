@@ -1,6 +1,6 @@
 # SpecKit for Projects ワークフロー詳細
 
-この文書は、`brief -> clarify -> common-design -> design -> tasks -> analyze -> implement` の流れと、各段階の責務境界を詳しく説明します。
+この文書は、`brief -> clarify -> common-design -> design -> tasks -> analyze -> implement -> debug -> reflect` の流れと、各段階の責務境界を詳しく説明します。
 
 ## 1. 全体像
 
@@ -15,8 +15,10 @@
 7. AI で `sdd.design`
 8. AI で `sdd.tasks`
 9. `sdd analyze`
-10. AI で `sdd.implement`
-11. `git diff` とレビュー
+10. 予定された task 実装は AI で `sdd.implement`
+11. 不具合起因の修正は AI で `sdd.debug`
+12. 手動コード差分の文書追随は AI で `sdd.reflect`
+13. `git diff` とレビュー
 
 重要なのは、各段階が別の正本を持つことです。
 
@@ -27,6 +29,8 @@
 - `tasks`: 実装単位にどう分解するか
 - `analyze`: 生成済み bundle に整合崩れがないか
 - `implement`: 実際に何を変えてどう検証したか
+- `debug`: 不具合修正と設計同期をどう完了させたか
+- `reflect`: 手動コード差分へ設計書をどう追随させたか
 
 ## 2. Step 0: 共通標準を整える
 
@@ -304,7 +308,47 @@ task 定義部は書き換えません。
 
 `in_progress` は、ユーザーが途中停止を明示したときだけが自然です。
 
-## 9. 再生成ポリシー
+## 10. Step 8: `debug`
+
+### 10.1 役割
+
+`debug` は不具合起因の作業を一連で扱う段階です。
+
+- バグの再現確認または不具合シグナルの特定
+- 必要なコード修正
+- テストや検証コマンドの実行
+- 影響した `specific_design`、`common_design`、`tasks.md` の同期
+
+### 10.2 `implement` との違い
+
+- `implement`: 既存 `TASK-xxx` を中心に予定作業を進める
+- `debug`: バグ修正を起点に、必要なら task 定義の補強まで行う
+
+### 10.3 更新境界
+
+- `briefs/*.md` は更新しない
+- `tasks.md` は execution ledger だけでなく task 定義の再生成や拡張が必要になることがある
+- shared truth が変わった場合だけ `designs/common_design/` を更新する
+
+## 11. Step 9: `reflect`
+
+### 11.1 役割
+
+`reflect` は current working tree diff を truth source として扱い、手動コード修正へ設計書と task 文書を追随させる段階です。
+
+### 11.2 何を確認するか
+
+- 変更コードがどの `design-id` に影響するか
+- `specific_design` の記述が現行コードとずれていないか
+- `common_design` の shared truth が変わっていないか
+- `tasks.md` が差分を説明できる状態か
+
+### 11.3 `debug` との違い
+
+- `debug`: バグ修正そのものも担当する
+- `reflect`: すでに存在する差分へ文書側を追随させる
+
+## 12. 再生成ポリシー
 
 段階ごとの再生成方針は次です。
 
@@ -313,8 +357,10 @@ task 定義部は書き換えません。
 - `design`: bundle 配下の managed artifact を full-file overwrite
 - `tasks`: task 定義は再生成、execution ledger は保持
 - `implement`: 選択 task の execution ledger だけ更新
+- `debug`: 必要なコード修正に加えて、影響文書と task 定義を同期
+- `reflect`: current diff に合わせて設計書と task 文書を同期
 
-### 9.1 手修正を残したいとき
+### 12.1 手修正を残したいとき
 
 設計束の生成物へ直接ルールを書き足すのは弱い運用です。残したいなら、次のいずれかへ戻します。
 
@@ -323,7 +369,7 @@ task 定義部は書き換えません。
 - `briefs/*.md`
 - `designs/common_design/*.md`
 
-### 9.2 差分確認の順番
+### 12.2 差分確認の順番
 
 1. `briefs/*.md`
 2. `designs/common_design/`
@@ -333,40 +379,46 @@ task 定義部は書き換えません。
 6. `sdd analyze` の failure detail
 7. 実装コード
 
-## 10. レビュー観点
+## 13. レビュー観点
 
-### 9.1 brief レビュー
+### 13.1 brief レビュー
 
 - Scope Out が明示されているか
 - 要件がテスト可能か
 - 共通設計依存が漏れていないか
 
-### 9.2 design レビュー
+### 13.2 design レビュー
 
 - 要件漏れがないか
 - 共有設計への参照が正しいか
 - feature 固有設計が shared truth を再定義していないか
 
-### 9.3 tasks レビュー
+### 13.3 tasks レビュー
 
 - 依存順が妥当か
 - 各 task の設計根拠が明記されているか
 - 実装不能な task 分割になっていないか
 
-### 10.4 analyze レビュー
+### 13.4 analyze レビュー
 
 - failure category が妥当な場所に出ているか
 - `traceability.yaml` と `tasks.md` の要件漏れがないか
 - shared design 参照切れがないか
 
-### 10.5 implement レビュー
+### 13.5 implement レビュー
 
 - 変更ファイルが task と一致しているか
 - 実施コマンドと結果が記録されているか
 - 対象外 task を巻き込んでいないか
 
-## 11. 関連ドキュメント
+### 13.6 debug / reflect レビュー
 
-- [guides/cli-reference.ja.md](/Users/iwasakishinya/Documents/hook/general_sdd/guides/cli-reference.ja.md)
-- [guides/artifact-reference.ja.md](/Users/iwasakishinya/Documents/hook/general_sdd/guides/artifact-reference.ja.md)
-- [guides/troubleshooting.ja.md](/Users/iwasakishinya/Documents/hook/general_sdd/guides/troubleshooting.ja.md)
+- 設計書更新がコード差分を正しく説明しているか
+- `tasks.md` に新しい実装経緯や修正経緯が残っているか
+- `briefs/*.md` を不要に触っていないか
+
+## 14. 関連ドキュメント
+
+- [guides/cli-reference.ja.md](cli-reference.ja.md)
+- [guides/artifact-reference.ja.md](artifact-reference.ja.md)
+- [guides/troubleshooting.ja.md](troubleshooting.ja.md)
