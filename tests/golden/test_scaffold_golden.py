@@ -78,12 +78,20 @@ def test_command_templates_match_golden_files():
             EXPECTED_ROOT / "shared" / "commands" / "design.md",
         )
         _assert_matches(
+            Path(".specify/templates/commands/debug.md"),
+            EXPECTED_ROOT / "shared" / "commands" / "debug.md",
+        )
+        _assert_matches(
             Path(".specify/templates/commands/tasks.md"),
             EXPECTED_ROOT / "shared" / "commands" / "tasks.md",
         )
         _assert_matches(
             Path(".specify/templates/commands/implement.md"),
             EXPECTED_ROOT / "shared" / "commands" / "implement.md",
+        )
+        _assert_matches(
+            Path(".specify/templates/commands/reflect.md"),
+            EXPECTED_ROOT / "shared" / "commands" / "reflect.md",
         )
 
 
@@ -113,12 +121,20 @@ def test_codex_agent_files_match_golden_files():
             EXPECTED_ROOT / "agents" / "codex" / "sdd.design.md",
         )
         _assert_matches(
+            Path(".codex/prompts/sdd.debug.md"),
+            EXPECTED_ROOT / "agents" / "codex" / "sdd.debug.md",
+        )
+        _assert_matches(
             Path(".codex/prompts/sdd.tasks.md"),
             EXPECTED_ROOT / "agents" / "codex" / "sdd.tasks.md",
         )
         _assert_matches(
             Path(".codex/prompts/sdd.implement.md"),
             EXPECTED_ROOT / "agents" / "codex" / "sdd.implement.md",
+        )
+        _assert_matches(
+            Path(".codex/prompts/sdd.reflect.md"),
+            EXPECTED_ROOT / "agents" / "codex" / "sdd.reflect.md",
         )
 
 
@@ -159,12 +175,20 @@ def test_generic_agent_files_match_golden_files():
             EXPECTED_ROOT / "agents" / "generic" / "sdd.design.md",
         )
         _assert_matches(
+            Path(".myagent/commands/sdd.debug.md"),
+            EXPECTED_ROOT / "agents" / "generic" / "sdd.debug.md",
+        )
+        _assert_matches(
             Path(".myagent/commands/sdd.tasks.md"),
             EXPECTED_ROOT / "agents" / "generic" / "sdd.tasks.md",
         )
         _assert_matches(
             Path(".myagent/commands/sdd.implement.md"),
             EXPECTED_ROOT / "agents" / "generic" / "sdd.implement.md",
+        )
+        _assert_matches(
+            Path(".myagent/commands/sdd.reflect.md"),
+            EXPECTED_ROOT / "agents" / "generic" / "sdd.reflect.md",
         )
 
 
@@ -213,10 +237,18 @@ def test_codex_skill_files_match_golden_files():
             EXPECTED_ROOT / "skills" / "speckit-for-projects-design" / "SKILL.md",
         )
         _assert_matches(
+            Path(".agents/skills/speckit-for-projects-debug/SKILL.md"),
+            EXPECTED_ROOT / "skills" / "speckit-for-projects-debug" / "SKILL.md",
+        )
+        _assert_matches(
             Path(".agents/skills/speckit-for-projects-tasks/SKILL.md"),
             EXPECTED_ROOT / "skills" / "speckit-for-projects-tasks" / "SKILL.md",
         )
         _assert_matches(
             Path(".agents/skills/speckit-for-projects-implement/SKILL.md"),
             EXPECTED_ROOT / "skills" / "speckit-for-projects-implement" / "SKILL.md",
+        )
+        _assert_matches(
+            Path(".agents/skills/speckit-for-projects-reflect/SKILL.md"),
+            EXPECTED_ROOT / "skills" / "speckit-for-projects-reflect" / "SKILL.md",
         )

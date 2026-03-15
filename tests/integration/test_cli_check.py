@@ -77,6 +77,8 @@ def test_check_prints_clarify_and_analyze_in_codex_usage_note_when_skills_exist(
         assert result.exit_code in {0, 1}, result.stdout
         assert "speckit-for-projects-analyze" in result.stdout
         assert "speckit-for-projects-clarify" in result.stdout
+        assert "speckit-for-projects-debug" in result.stdout
+        assert "speckit-for-projects-reflect" in result.stdout
 
 
 def test_check_accepts_kiro_alias(monkeypatch):

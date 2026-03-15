@@ -58,6 +58,13 @@ COMMAND_SPECS = (
         "speckit-for-projects-design",
     ),
     CommandSpec(
+        "sdd.debug",
+        "commands/debug.md.j2",
+        "debug.md",
+        "Fix a bug and synchronize impacted design artifacts and task ledgers.",
+        "speckit-for-projects-debug",
+    ),
+    CommandSpec(
         "sdd.tasks",
         "commands/tasks.md.j2",
         "tasks.md",
@@ -70,6 +77,13 @@ COMMAND_SPECS = (
         "implement.md",
         "Implement selected TASK-xxx items and update execution state in tasks.md.",
         "speckit-for-projects-implement",
+    ),
+    CommandSpec(
+        "sdd.reflect",
+        "commands/reflect.md.j2",
+        "reflect.md",
+        "Synchronize design artifacts and task ledgers to the current working tree diff.",
+        "speckit-for-projects-reflect",
     ),
 )
 

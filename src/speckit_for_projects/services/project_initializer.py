@@ -28,8 +28,10 @@ MANAGED_TEMPLATES = {
     Path(".specify/templates/commands/clarify.md"): "commands/clarify.md.j2",
     Path(".specify/templates/commands/common-design.md"): "commands/common-design.md.j2",
     Path(".specify/templates/commands/design.md"): "commands/design.md.j2",
+    Path(".specify/templates/commands/debug.md"): "commands/debug.md.j2",
     Path(".specify/templates/commands/tasks.md"): "commands/tasks.md.j2",
     Path(".specify/templates/commands/implement.md"): "commands/implement.md.j2",
+    Path(".specify/templates/commands/reflect.md"): "commands/reflect.md.j2",
     Path(".specify/templates/artifacts/brief.md"): "artifacts/brief.md.j2",
     Path(".specify/templates/artifacts/design/overview.md"): "artifacts/design/overview.md.j2",
     Path(".specify/templates/artifacts/design/ui-storybook/README.md"): (
@@ -272,8 +274,9 @@ def _codex_usage_note(ai_skills: bool) -> str:
             "`speckit-for-projects-analyze`, `speckit-for-projects-brief`, "
             "`speckit-for-projects-clarify`, "
             "`speckit-for-projects-common-design`, "
-            "`speckit-for-projects-design`, `speckit-for-projects-tasks`, "
-            "or `speckit-for-projects-implement`."
+            "`speckit-for-projects-design`, `speckit-for-projects-debug`, "
+            "`speckit-for-projects-tasks`, `speckit-for-projects-implement`, "
+            "or `speckit-for-projects-reflect`."
         )
     return (
         "note: Codex does not register custom /sdd.* slash commands. "

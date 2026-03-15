@@ -105,6 +105,8 @@ def test_e2e_init_and_check_with_generic_agent(tmp_path: Path) -> None:
     assert (tmp_path / ".specify" / "templates" / "commands" / "brief.md").exists()
     assert (tmp_path / ".specify" / "templates" / "commands" / "analyze.md").exists()
     assert (tmp_path / ".specify" / "templates" / "commands" / "common-design.md").exists()
+    assert (tmp_path / ".specify" / "templates" / "commands" / "debug.md").exists()
+    assert (tmp_path / ".specify" / "templates" / "commands" / "reflect.md").exists()
     assert (
         tmp_path / ".specify" / "templates" / "artifacts" / "design" / "traceability.yaml"
     ).exists()
@@ -127,7 +129,9 @@ def test_e2e_init_and_check_with_generic_agent(tmp_path: Path) -> None:
     assert (tmp_path / ".myagent" / "commands" / "sdd.analyze.md").exists()
     assert (tmp_path / ".myagent" / "commands" / "sdd.common-design.md").exists()
     assert (tmp_path / ".myagent" / "commands" / "sdd.design.md").exists()
+    assert (tmp_path / ".myagent" / "commands" / "sdd.debug.md").exists()
     assert (tmp_path / ".myagent" / "commands" / "sdd.implement.md").exists()
+    assert (tmp_path / ".myagent" / "commands" / "sdd.reflect.md").exists()
     assert (tmp_path / "briefs").is_dir()
     assert (tmp_path / "designs").is_dir()
     assert (tmp_path / "designs" / "common_design" / "api").is_dir()
@@ -145,6 +149,8 @@ def test_e2e_init_with_codex_skills(tmp_path: Path) -> None:
     assert (tmp_path / ".codex" / "prompts" / "sdd.analyze.md").exists()
     assert (tmp_path / ".codex" / "prompts" / "sdd.common-design.md").exists()
     assert (tmp_path / ".codex" / "prompts" / "sdd.design.md").exists()
+    assert (tmp_path / ".codex" / "prompts" / "sdd.debug.md").exists()
+    assert (tmp_path / ".codex" / "prompts" / "sdd.reflect.md").exists()
     assert (
         tmp_path / ".agents" / "skills" / "speckit-for-projects-analyze" / "SKILL.md"
     ).exists()
@@ -153,9 +159,13 @@ def test_e2e_init_with_codex_skills(tmp_path: Path) -> None:
         tmp_path / ".agents" / "skills" / "speckit-for-projects-common-design" / "SKILL.md"
     ).exists()
     assert (tmp_path / ".agents" / "skills" / "speckit-for-projects-design" / "SKILL.md").exists()
+    assert (tmp_path / ".agents" / "skills" / "speckit-for-projects-debug" / "SKILL.md").exists()
     assert (tmp_path / ".agents" / "skills" / "speckit-for-projects-tasks" / "SKILL.md").exists()
     assert (
         tmp_path / ".agents" / "skills" / "speckit-for-projects-implement" / "SKILL.md"
+    ).exists()
+    assert (
+        tmp_path / ".agents" / "skills" / "speckit-for-projects-reflect" / "SKILL.md"
     ).exists()
 
 
@@ -169,14 +179,18 @@ def test_e2e_init_with_kiro_alias_skills(tmp_path: Path) -> None:
     assert (tmp_path / ".kiro" / "prompts" / "sdd.analyze.md").exists()
     assert (tmp_path / ".kiro" / "prompts" / "sdd.common-design.md").exists()
     assert (tmp_path / ".kiro" / "prompts" / "sdd.design.md").exists()
+    assert (tmp_path / ".kiro" / "prompts" / "sdd.debug.md").exists()
+    assert (tmp_path / ".kiro" / "prompts" / "sdd.reflect.md").exists()
     assert (tmp_path / ".kiro" / "skills" / "speckit-for-projects-analyze" / "SKILL.md").exists()
     assert (tmp_path / ".kiro" / "skills" / "speckit-for-projects-brief" / "SKILL.md").exists()
     assert (
         tmp_path / ".kiro" / "skills" / "speckit-for-projects-common-design" / "SKILL.md"
     ).exists()
     assert (tmp_path / ".kiro" / "skills" / "speckit-for-projects-design" / "SKILL.md").exists()
+    assert (tmp_path / ".kiro" / "skills" / "speckit-for-projects-debug" / "SKILL.md").exists()
     assert (tmp_path / ".kiro" / "skills" / "speckit-for-projects-tasks" / "SKILL.md").exists()
     assert (tmp_path / ".kiro" / "skills" / "speckit-for-projects-implement" / "SKILL.md").exists()
+    assert (tmp_path / ".kiro" / "skills" / "speckit-for-projects-reflect" / "SKILL.md").exists()
 
 
 def test_e2e_force_rerun_overwrites_managed_files(tmp_path: Path) -> None:

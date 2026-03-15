@@ -57,14 +57,18 @@ The rest of the workflow is executed through the installed agent prompts and ski
 - `sdd.analyze`
 - `sdd.common-design`
 - `sdd.design`
+- `sdd.debug`
 - `sdd.tasks`
 - `sdd.implement`
+- `sdd.reflect`
 
 Responsibility split:
 
 - `sdd check`: validate scaffold, directory layout, agent command files, and runtime availability
 - `sdd.clarify`: tighten ambiguous requirements and shared design assumptions before design starts
 - `sdd analyze`: validate one or more generated `specific_design` bundles and report consistency issues
+- `sdd.debug`: fix a bug and synchronize impacted design artifacts and execution ledgers
+- `sdd.reflect`: reconcile design and task documents to the current working tree diff
 
 ## Installation
 
@@ -166,8 +170,10 @@ Typical outputs later created through the workflow:
 7. Generate one `specific_design` bundle from one brief.
 8. Generate `tasks.md`.
 9. Run `sdd analyze <design-id>` or `sdd analyze --all`.
-10. Execute implementation work and update the execution ledger.
-11. Review the resulting diff.
+10. Use `sdd.implement` for planned task execution.
+11. Use `sdd.debug` for defect-driven fixes that also need design/task synchronization.
+12. Use `sdd.reflect` after manual code edits when the current diff is the source of truth.
+13. Review the resulting diff.
 
 ## `sdd init` Behavior
 
@@ -234,8 +240,10 @@ Exit codes:
     │   ├── clarify.md
     │   ├── common-design.md
     │   ├── design.md
+    │   ├── debug.md
     │   ├── tasks.md
-    │   └── implement.md
+    │   ├── implement.md
+    │   └── reflect.md
     └── artifacts/
         ├── brief.md
         ├── common_design/

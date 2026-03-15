@@ -87,8 +87,10 @@ class EnvironmentChecker:
             "speckit-for-projects-clarify",
             "speckit-for-projects-common-design",
             "speckit-for-projects-design",
+            "speckit-for-projects-debug",
             "speckit-for-projects-tasks",
             "speckit-for-projects-implement",
+            "speckit-for-projects-reflect",
         ]
         if all((skills_dir / skill_name / "SKILL.md").exists() for skill_name in skill_names):
             return (
@@ -97,7 +99,8 @@ class EnvironmentChecker:
                 "`speckit-for-projects-brief`, "
                 "`speckit-for-projects-clarify`, "
                 "`speckit-for-projects-common-design`, `speckit-for-projects-design`, "
-                "`speckit-for-projects-tasks`, or `speckit-for-projects-implement`, "
+                "`speckit-for-projects-debug`, `speckit-for-projects-tasks`, "
+                "`speckit-for-projects-implement`, or `speckit-for-projects-reflect`, "
                 "or open the saved prompt files directly."
             )
         return (

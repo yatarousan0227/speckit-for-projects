@@ -55,14 +55,18 @@ flowchart TD
 - `sdd.clarify`
 - `sdd.common-design`
 - `sdd.design`
+- `sdd.debug`
 - `sdd.tasks`
 - `sdd.implement`
+- `sdd.reflect`
 
 責務分離は次のとおりです。
 
 - `sdd check`: scaffold、ディレクトリ構成、agent 向け command、runtime 有無を確認する
 - `sdd.clarify`: `brief` や共有設計前提の曖昧さを、`design` 前に詰める
 - `sdd analyze`: `specific_design` 成果物 bundle の整合性を確認する
+- `sdd.debug`: バグ修正と、それに伴う設計書・execution ledger の同期を進める
+- `sdd.reflect`: 手動コード修正を正として設計書と task 文書の差分を追随させる
 
 ## インストール
 
@@ -164,8 +168,10 @@ sdd analyze <design-id>
 7. `sdd.design` で feature 固有の設計束を作る
 8. `sdd.tasks` で `tasks.md` を作る
 9. `sdd analyze <design-id>` または `sdd analyze --all` で bundle 整合を確認する
-10. `sdd.implement` で実装と execution ledger 更新を進める
-11. 差分を確認する
+10. 予定された task 実装は `sdd.implement` で進める
+11. 不具合起因の修正は `sdd.debug` で設計書・task 同期まで含めて進める
+12. 手動コード修正後の追随は `sdd.reflect` で行う
+13. 差分を確認する
 
 ## `sdd init` の実挙動
 
@@ -232,8 +238,10 @@ sdd analyze <design-id>
     │   ├── clarify.md
     │   ├── common-design.md
     │   ├── design.md
+    │   ├── debug.md
     │   ├── tasks.md
-    │   └── implement.md
+    │   ├── implement.md
+    │   └── reflect.md
     └── artifacts/
         ├── brief.md
         ├── common_design/
